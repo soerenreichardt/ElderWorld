@@ -1,6 +1,11 @@
 package org.elder.core;
 
+import org.elder.core.ecs.Component;
+import org.elder.core.ecs.ComponentManager;
+import org.elder.core.ecs.GameComponent;
 import org.lwjgl.opengl.GL;
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
 
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
@@ -39,6 +44,11 @@ public class Game extends Thread {
     }
 
     private void registerComponents() {
-
+        var componentManager = ComponentManager.getInstance();
+        new Reflections("org.elder", new SubTypesScanner(false))
+                .getSubTypesOf(Object.class)
+                .stream()
+                .filter(clazz -> clazz.isAnnotationPresent(GameComponent.class))
+                .forEach(clazz -> componentManager.registerComponent((Class<? extends Component>) clazz));
     }
 }

@@ -40,11 +40,11 @@ public class ComponentManager {
         throw new IllegalArgumentException(String.format("No component of type %s was found", componentClass.getSimpleName()));
     }
 
-    public <C extends Component> void registerComponent(Class<C> componentClass) {
+    public <C extends Component> void registerComponent(Class<? extends Component> componentClass) {
         ComponentFactory<C> componentFactory = () -> {
             try {
                 var constructor = componentClass.getDeclaredConstructor();
-                return constructor.newInstance();
+                return (C) constructor.newInstance();
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(String.format(
                         "Component %s is missing mandatory empty constructor", componentClass.getSimpleName()),

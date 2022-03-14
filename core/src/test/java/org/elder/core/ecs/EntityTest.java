@@ -14,6 +14,7 @@ class EntityTest {
         }
     }
 
+    @GameComponent
     static class TestComponent extends Component {
         int anInt = 42;
     }
