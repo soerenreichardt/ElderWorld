@@ -8,6 +8,10 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Game extends Thread {
 
+    public Game() {
+        registerComponents();
+    }
+
     @Override
     public void run() {
         var window = new Window(800, 600);
@@ -32,5 +36,9 @@ public class Game extends Thread {
             // invoked during this call.
             glfwPollEvents();
         }
+    }
+
+    private void registerComponents() {
+
     }
 }
