@@ -1,0 +1,9 @@
+
+/.idea
+/.gradle
+
+/hs_err_*
+
+*.class
+
+/build/
