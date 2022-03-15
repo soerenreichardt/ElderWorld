@@ -70,6 +70,8 @@ public class Window {
         // Enable v-sync
         glfwSwapInterval(1);
 
+        glfwMakeContextCurrent(NULL);
+
         glfwShowWindow(window);
     }
 

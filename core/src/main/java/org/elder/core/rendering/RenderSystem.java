@@ -14,7 +14,7 @@ public class RenderSystem implements System {
     }
 
     @Override
-    public void update(long delta) {
+    public void update(float delta) {
 
     }
 }
