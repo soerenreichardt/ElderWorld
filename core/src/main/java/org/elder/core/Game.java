@@ -3,9 +3,13 @@ package org.elder.core;
 import org.elder.core.ecs.Component;
 import org.elder.core.ecs.ComponentManager;
 import org.elder.core.ecs.GameComponent;
+import org.elder.core.ecs.GameObject;
 import org.lwjgl.opengl.GL;
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.Scanners;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
@@ -13,7 +17,10 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Game extends Thread {
 
+    private final List<GameObject> gameObjects;
+
     public Game() {
+        this.gameObjects = new ArrayList<>();
         registerComponents();
     }
 
@@ -30,8 +37,12 @@ public class Game extends Thread {
         GL.createCapabilities();
 
         // Set the clear color
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
+        loop(window);
+    }
+
+    private void loop(Window window) {
         while (!window.shouldClose()) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
@@ -45,7 +56,7 @@ public class Game extends Thread {
 
     private void registerComponents() {
         var componentManager = ComponentManager.getInstance();
-        new Reflections("org.elder", new SubTypesScanner(false))
+        new Reflections("org.elder", Scanners.SubTypes.filterResultsBy(__ -> true))
                 .getSubTypesOf(Object.class)
                 .stream()
                 .filter(clazz -> clazz.isAnnotationPresent(GameComponent.class))

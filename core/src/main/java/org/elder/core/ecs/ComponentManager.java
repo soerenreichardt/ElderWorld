@@ -1,7 +1,10 @@
 package org.elder.core.ecs;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ComponentManager {
 
@@ -19,8 +22,8 @@ public class ComponentManager {
         this.componentFactories = new HashMap<>();
     }
 
-    public <T extends Component> Collection<T> getComponents(Class<T> componentClass) {
-        return (Collection<T>) this.components.get(componentClass);
+    public <T extends Component> List<T> getComponentListReference(Class<T> componentClass) {
+        return (List<T>) this.components.get(componentClass);
     }
 
     public <C extends Component> C addComponent(int entityId, Class<C> componentClass) {
@@ -61,6 +64,10 @@ public class ComponentManager {
 
     public void removeEntity(int entityId) {
         components.values().forEach(componentList -> componentList.set(entityId, null));
+    }
+
+    public <C extends Component> void removeComponent(int entityId, Class<C> componentClass) {
+        components.get(componentClass).set(entityId, null);
     }
 
     @FunctionalInterface
