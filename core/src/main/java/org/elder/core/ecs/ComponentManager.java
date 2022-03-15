@@ -59,6 +59,10 @@ public class ComponentManager {
         getInstance().componentFactories.put(componentClass, componentFactory);
     }
 
+    public void removeEntity(int entityId) {
+        components.values().forEach(componentList -> componentList.set(entityId, null));
+    }
+
     @FunctionalInterface
     interface ComponentFactory<C extends Component> {
          C create();

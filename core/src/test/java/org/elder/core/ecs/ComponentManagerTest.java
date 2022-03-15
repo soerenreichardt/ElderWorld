@@ -23,4 +23,18 @@ class ComponentManagerTest {
         assertThat(componentManager.getComponents(TestComponent.class)).size().isEqualTo(10);
     }
 
+    @Test
+    void shouldRemoveComponentsOfDeletedEntities() {
+        var componentManager = ComponentManager.getInstance();
+
+        for (int i = 0; i < 3; i++) {
+            componentManager.addComponent(i, TestComponent.class);
+        }
+
+        componentManager.removeEntity(1);
+        assertThat(componentManager.getComponent(0, TestComponent.class)).isNotNull();
+        assertThat(componentManager.getComponent(1, TestComponent.class)).isNull();
+        assertThat(componentManager.getComponent(2, TestComponent.class)).isNotNull();
+    }
+
 }

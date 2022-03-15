@@ -22,7 +22,8 @@ public abstract class Entity {
         return this.componentManager.getComponent(id, componentClass);
     }
 
-    public void destroy() {
+    public final void destroy() {
+        componentManager.removeEntity(id);
         idManager.removeId(id);
     }
 
