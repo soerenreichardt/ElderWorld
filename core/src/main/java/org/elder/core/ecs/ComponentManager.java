@@ -26,11 +26,13 @@ public class ComponentManager {
         return (Collection<T>) this.components.get(componentClass).values();
     }
 
-    public <C extends Component> void addComponent(UUID entityId, Class<C> componentClass) {
+    public <C extends Component> C addComponent(UUID entityId, Class<C> componentClass) {
         var componentFactory = componentFactories.get(componentClass);
+        var component = componentFactory.create();
         this.components
                 .computeIfAbsent(componentClass, __ -> new HashMap<>())
-                .put(entityId, componentFactory.create());
+                .put(entityId, component);
+        return (C) component;
     }
 
     public <C extends Component> C getComponent(UUID entityId, Class<C> componentClass) {

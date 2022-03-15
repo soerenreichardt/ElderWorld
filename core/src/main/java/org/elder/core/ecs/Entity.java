@@ -14,8 +14,8 @@ public abstract class Entity {
         this.componentManager = ComponentManager.getInstance();
     }
 
-    public <C extends Component> void addComponent(Class<C> componentClass) {
-        this.componentManager.addComponent(id, componentClass);
+    public <C extends Component> C addComponent(Class<C> componentClass) {
+        return this.componentManager.addComponent(id, componentClass);
     }
 
     public <C extends Component> C getComponent(Class<C> componentClass) {
