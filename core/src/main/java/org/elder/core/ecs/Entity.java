@@ -1,17 +1,17 @@
 package org.elder.core.ecs;
 
-import java.util.UUID;
-
 public abstract class Entity {
 
     private final String name;
-    private final UUID id;
     private final ComponentManager componentManager;
+    private final IdManager idManager;
+    private final int id;
 
     public Entity(String name) {
         this.name = name;
-        this.id = UUID.randomUUID();
+        this.idManager = IdManager.getInstance();
         this.componentManager = ComponentManager.getInstance();
+        this.id = idManager.getNewId();
     }
 
     public <C extends Component> C addComponent(Class<C> componentClass) {
@@ -21,4 +21,10 @@ public abstract class Entity {
     public <C extends Component> C getComponent(Class<C> componentClass) {
         return this.componentManager.getComponent(id, componentClass);
     }
+
+    public void destroy() {
+        idManager.removeId(id);
+    }
+
+    protected void onDestroy() {}
 }

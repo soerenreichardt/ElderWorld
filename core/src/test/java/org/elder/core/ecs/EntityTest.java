@@ -14,11 +14,6 @@ class EntityTest {
         }
     }
 
-    @GameComponent
-    static class TestComponent extends Component {
-        int anInt = 42;
-    }
-
     @BeforeEach
     void setup() {
         ComponentManager.getInstance().registerComponent(TestComponent.class);
@@ -33,5 +28,4 @@ class EntityTest {
         assertThat(component).isInstanceOf(TestComponent.class);
         assertThat(component.anInt).isEqualTo(42);
     }
-
 }

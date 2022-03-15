@@ -1,10 +1,7 @@
 package org.elder.core.ecs;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class ComponentManager {
 
@@ -14,7 +11,7 @@ public class ComponentManager {
         return INSTANCE;
     }
 
-    private final Map<Class<? extends Component>, Map<UUID, Component>> components;
+    private final Map<Class<? extends Component>, List<Component>> components;
     private final Map<Class<? extends Component>, ComponentFactory<? extends Component>> componentFactories;
 
     private ComponentManager() {
@@ -23,19 +20,22 @@ public class ComponentManager {
     }
 
     public <T extends Component> Collection<T> getComponents(Class<T> componentClass) {
-        return (Collection<T>) this.components.get(componentClass).values();
+        return (Collection<T>) this.components.get(componentClass);
     }
 
-    public <C extends Component> C addComponent(UUID entityId, Class<C> componentClass) {
+    public <C extends Component> C addComponent(int entityId, Class<C> componentClass) {
         var componentFactory = componentFactories.get(componentClass);
         var component = componentFactory.create();
-        this.components
-                .computeIfAbsent(componentClass, __ -> new HashMap<>())
-                .put(entityId, component);
+        var componentList = this.components.computeIfAbsent(componentClass, __ -> new ArrayList<>());
+        if (entityId == componentList.size()) {
+            componentList.add(component);
+        } else {
+            componentList.set(entityId, component);
+        }
         return (C) component;
     }
 
-    public <C extends Component> C getComponent(UUID entityId, Class<C> componentClass) {
+    public <C extends Component> C getComponent(int entityId, Class<C> componentClass) {
         if (this.components.containsKey(componentClass)) {
             return (C) this.components.get(componentClass).get(entityId);
         }
