@@ -1,5 +1,6 @@
 package org.elder.core;
 
+import org.elder.core.rendering.RenderSystem;
 import org.lwjgl.opengl.GL;
 
 import java.util.function.BooleanSupplier;
@@ -12,10 +13,23 @@ public class Game extends Thread {
 
     private final BooleanSupplier shouldCloseFn;
     private final long window;
+    private final int width;
+    private final int height;
 
-    public Game(BooleanSupplier shouldCloseFn, long window) {
+    private final RenderSystem renderSystem;
+
+    public Game(
+            BooleanSupplier shouldCloseFn,
+            long window,
+            int width,
+            int height
+    ) {
         this.shouldCloseFn = shouldCloseFn;
         this.window = window;
+        this.width = width;
+        this.height = height;
+
+        this.renderSystem = new RenderSystem();
     }
 
     @Override
@@ -28,9 +42,10 @@ public class Game extends Thread {
         // bindings available for use.
         GL.createCapabilities();
 
-
         // Set the clear color
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+        renderSystem.start();
 
         var lastTime = System.nanoTime();
         while (!shouldCloseFn.getAsBoolean()) {
@@ -38,6 +53,14 @@ public class Game extends Thread {
             float dt = (currentTime - lastTime) * 1E-9f;
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
+            glViewport(0, 0, width, height);
+            glMatrixMode(GL_PROJECTION);
+            float aspect = (float) width / height;
+            glLoadIdentity();
+            glOrtho(-aspect, aspect, -1, 1, -1, 1);
+
+            renderSystem.update(dt);
 
             glfwSwapBuffers(window); // swap the color buffers
         }

@@ -11,19 +11,25 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class GameRunner {
 
-    public GameRunner() {
+    private int width;
+    private int height;
+
+    public GameRunner(int width, int height) {
+        this.width = width;
+        this.height = height;
+
         registerComponents();
     }
 
     public void start() throws InterruptedException {
-        var window = new Window(800, 600);
+        var window = new Window(width, height);
         window.initialize();
 
-        var updateAndRenderThread = new Game(window::shouldClose, window.getId());
-        updateAndRenderThread.start();
+        var game = new Game(window::shouldClose, window.getId(), width, height);
+        game.start();
         windowLoop(window);
 
-        updateAndRenderThread.join();
+        game.join();
 
         glfwFreeCallbacks(window.getId());
         glfwDestroyWindow(window.getId());
@@ -32,7 +38,6 @@ public class GameRunner {
 
     private void windowLoop(Window window) {
         while (!window.shouldClose()) {
-
             // Poll for window events. The key callback above will only be
             // invoked during this call.
             glfwPollEvents();

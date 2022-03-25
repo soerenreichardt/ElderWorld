@@ -20,7 +20,7 @@ class ComponentManagerTest {
             componentManager.addComponent(i, TestComponent.class);
         }
 
-        assertThat(componentManager.getComponentListReference(TestComponent.class)).size().isEqualTo(10);
+        assertThat(componentManager.getComponentListReference(TestComponent.class).get()).size().isEqualTo(10);
     }
 
     @Test
