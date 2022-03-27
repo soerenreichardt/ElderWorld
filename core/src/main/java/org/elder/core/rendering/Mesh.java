@@ -8,4 +8,5 @@ import org.joml.Vector2f;
 public class Mesh extends Component {
     public Vector2f[] vertices;
     public int[] indices;
+    public Shader shader;
 }

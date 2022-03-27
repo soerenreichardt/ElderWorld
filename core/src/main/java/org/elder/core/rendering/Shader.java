@@ -1,7 +1,6 @@
 package org.elder.core.rendering;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.system.MemoryStack;
 
@@ -24,25 +23,16 @@ public class Shader {
 
     private static final int UNINITIALIZED = -1;
 
-    private final Path vertexShaderPath;
-    private final Path fragmentShaderPath;
+    private final String vertexShaderPath;
+    private final String fragmentShaderPath;
     private final int version;
     private int program;
 
-    public Shader(Path vertexShaderPath, Path fragmentShaderPath) {
+    public Shader(String vertexShaderPath, String fragmentShaderPath, GLCapabilities capabilities) {
         this.vertexShaderPath = vertexShaderPath;
         this.fragmentShaderPath = fragmentShaderPath;
 
-        GLCapabilities caps = GL.getCapabilities();
-        int version;
-        if (caps.OpenGL33) {
-            version = 330;
-        } else if (caps.OpenGL21) {
-            version = 120;
-        } else {
-            version = 110;
-        }
-        this.version = version;
+        this.version = openGLVersion(capabilities);
         this.program = UNINITIALIZED;
     }
 
@@ -74,7 +64,7 @@ public class Shader {
         glUseProgram(program);
     }
 
-    private ByteBuffer readShaderFile(Path shaderPath) {
+    private ByteBuffer readShaderFile(String shaderPath) {
         try {
             return ioResourceToByteBuffer(shaderPath, 4096);
         } catch (IOException e) {
@@ -82,7 +72,7 @@ public class Shader {
         }
     }
 
-    private void compileShader(Path shaderPath, int shader) {
+    private void compileShader(String shaderPath, int shader) {
         var byteBuffer = readShaderFile(shaderPath);
         compileShader(version, shader, byteBuffer);
     }
@@ -107,9 +97,10 @@ public class Shader {
     }
 
 
-    public static ByteBuffer ioResourceToByteBuffer(Path path, int bufferSize) throws IOException {
+    public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
         ByteBuffer buffer;
 
+        var path = Path.of(resource);
         if (Files.isReadable(path)) {
             try (SeekableByteChannel fc = Files.newByteChannel(path)) {
                 buffer = createByteBuffer((int) fc.size() + 1);
@@ -118,7 +109,7 @@ public class Shader {
             }
         } else {
             try (
-                    InputStream source = Shader.class.getClassLoader().getResourceAsStream(path.toString());
+                    InputStream source = Shader.class.getClassLoader().getResourceAsStream(resource);
                     ReadableByteChannel rbc = Channels.newChannel(source)
             ) {
                 buffer = createByteBuffer(bufferSize);
@@ -160,5 +151,17 @@ public class Shader {
             glGetProgramInfoLog(obj);
             System.out.format("%s\n", glGetProgramInfoLog(obj));
         }
+    }
+
+    private static int openGLVersion(GLCapabilities capabilities) {
+        int version;
+        if (capabilities.OpenGL33) {
+            version = 330;
+        } else if (capabilities.OpenGL21) {
+            version = 120;
+        } else {
+            version = 110;
+        }
+        return version;
     }
 }

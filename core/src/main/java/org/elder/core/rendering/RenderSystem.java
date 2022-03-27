@@ -26,11 +26,6 @@ public class RenderSystem implements System {
     }
 
     public void start() {
-        buffersList.forEach(this::renderMesh);
-    }
-
-    @Override
-    public void update(float delta) {
         for (Mesh mesh : meshComponents) {
             int ibo = glGenBuffers();
             int vbo = glGenBuffers();
@@ -45,6 +40,11 @@ public class RenderSystem implements System {
 
             buffersList.add(new Buffers(vbo, ibo, vertexBuffer, indexBuffer));
         }
+    }
+
+    @Override
+    public void update(float delta) {
+        buffersList.forEach(this::renderMesh);
     }
 
     private void renderMesh(Buffers buffers) {

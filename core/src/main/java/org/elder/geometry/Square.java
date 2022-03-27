@@ -1,8 +1,10 @@
 package org.elder.geometry;
 
 import org.elder.core.ecs.GameObject;
+import org.elder.core.rendering.DefaultShader;
 import org.elder.core.rendering.Mesh;
 import org.joml.Vector2f;
+import org.lwjgl.opengl.GL;
 
 public class Square extends GameObject {
 
@@ -23,10 +25,13 @@ public class Square extends GameObject {
     public Square(String name) {
         super(name);
         this.mesh = addComponent(Mesh.class);
+
+        initializeMesh();
     }
 
     private void initializeMesh() {
         mesh.vertices = SQUARE_VERTICES;
         mesh.indices = SQUARE_INDICES;
+        mesh.shader = new DefaultShader(GL.getCapabilities());
     }
 }
