@@ -2,7 +2,7 @@ package org.elder.core.ecs;
 
 public abstract class GameObject extends Entity {
 
-    private final Transform transform;
+    protected final Transform transform;
 
     public GameObject(String name) {
         super(name);

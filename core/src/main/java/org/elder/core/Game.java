@@ -6,8 +6,7 @@ import org.lwjgl.opengl.GL;
 
 import java.util.function.BooleanSupplier;
 
-import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Game extends Thread {
@@ -70,6 +69,12 @@ public class Game extends Thread {
 
         // Set the clear color
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glEnable(GL_CULL_FACE);
+
+        glfwSwapInterval(1);
     }
 
     private void debug() {

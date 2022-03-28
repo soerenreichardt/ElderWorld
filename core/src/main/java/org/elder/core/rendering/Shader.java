@@ -13,9 +13,11 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 import static org.lwjgl.BufferUtils.createByteBuffer;
 import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.glBindFragDataLocation;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.memSlice;
 
@@ -27,6 +29,7 @@ public class Shader {
     private final String fragmentShaderPath;
     private final int version;
     private int program;
+    private int positionMatrix;
 
     public Shader(String vertexShaderPath, String fragmentShaderPath, GLCapabilities capabilities) {
         this.vertexShaderPath = vertexShaderPath;
@@ -46,6 +49,7 @@ public class Shader {
         var program = glCreateProgram();
         glAttachShader(program, vertexShader);
         glAttachShader(program, fragmentShader);
+        glBindFragDataLocation(program, 0, "outColor");
         glLinkProgram(program);
 
         printProgramInfoLog(program);
@@ -53,6 +57,10 @@ public class Shader {
         if (glGetProgrami(program, GL_LINK_STATUS) != GL_TRUE) {
             throw new IllegalStateException("Failed to link program.");
         }
+
+        glUseProgram(program);
+        positionMatrix = glGetAttribLocation(program, "position");
+        glUseProgram(0);
 
         this.program = program;
     }
@@ -62,6 +70,10 @@ public class Shader {
             throw new IllegalStateException("Expected shader to be compiled and linked to a program");
         }
         glUseProgram(program);
+    }
+
+    public int positionMatrixLocation() {
+        return this.positionMatrix;
     }
 
     private ByteBuffer readShaderFile(String shaderPath) {
@@ -109,7 +121,10 @@ public class Shader {
             }
         } else {
             try (
-                    InputStream source = Shader.class.getClassLoader().getResourceAsStream(resource);
+                    InputStream source = Objects.requireNonNull(
+                            Shader.class.getClassLoader().getResourceAsStream(path.toString()),
+                            String.format("Resource path %s was not found", path)
+                    );
                     ReadableByteChannel rbc = Channels.newChannel(source)
             ) {
                 buffer = createByteBuffer(bufferSize);

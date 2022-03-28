@@ -33,5 +33,6 @@ public class Square extends GameObject {
         mesh.vertices = SQUARE_VERTICES;
         mesh.indices = SQUARE_INDICES;
         mesh.shader = new DefaultShader(GL.getCapabilities());
+        mesh.transform = transform;
     }
 }
