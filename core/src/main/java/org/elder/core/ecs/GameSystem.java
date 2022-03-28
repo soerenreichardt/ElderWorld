@@ -1,5 +1,5 @@
 package org.elder.core.ecs;
 
-public interface System {
+public interface GameSystem extends Lifecycle {
     void update(float delta);
 }

@@ -1,7 +1,7 @@
 package org.elder.core.rendering;
 
 import org.elder.core.ecs.ComponentManager;
-import org.elder.core.ecs.System;
+import org.elder.core.ecs.GameSystem;
 import org.elder.core.ecs.Transform;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
@@ -11,10 +11,9 @@ import java.util.List;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL30.*;
 
-public class RenderSystem implements System {
+public class RenderSystem implements GameSystem {
 
     private final List<Mesh> meshComponents;
     private final List<RenderObject> buffersList;
@@ -28,6 +27,7 @@ public class RenderSystem implements System {
         this.buffersList = new ArrayList<>(meshComponents.size());
     }
 
+    @Override
     public void start() {
         vao = glGenVertexArrays();
         glBindVertexArray(vao);
@@ -43,6 +43,11 @@ public class RenderSystem implements System {
 
             buffersList.add(new RenderObject(indices, mesh.transform, shader));
         }
+    }
+
+    @Override
+    public void stop() {
+        glDeleteVertexArrays(vao);
     }
 
     private int createOpenGLBuffers(Mesh mesh) {

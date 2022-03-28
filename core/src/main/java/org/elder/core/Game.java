@@ -1,9 +1,12 @@
 package org.elder.core;
 
+import org.elder.core.ecs.GameSystem;
 import org.elder.core.rendering.RenderSystem;
 import org.elder.geometry.Square;
 import org.lwjgl.opengl.GL;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BooleanSupplier;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -16,7 +19,7 @@ public class Game extends Thread {
     private final int width;
     private final int height;
 
-    private RenderSystem renderSystem;
+    private final List<GameSystem> systems;
 
     public Game(
             BooleanSupplier shouldCloseFn,
@@ -28,16 +31,17 @@ public class Game extends Thread {
         this.window = window;
         this.width = width;
         this.height = height;
+        this.systems = new ArrayList<>();
     }
 
     @Override
     public void run() {
-        initOpenGL();
+        initializeOpenGL();
 
         debug();
 
-        renderSystem = new RenderSystem();
-        renderSystem.start();
+        addSystems();
+        initializeSystems();
 
         var lastTime = System.nanoTime();
         while (!shouldCloseFn.getAsBoolean()) {
@@ -52,13 +56,15 @@ public class Game extends Thread {
             glLoadIdentity();
             glOrtho(-aspect, aspect, -1, 1, -1, 1);
 
-            renderSystem.update(dt);
+            systems.forEach(system -> system.update(dt));
 
             glfwSwapBuffers(window); // swap the color buffers
         }
+
+        removeSystems();
     }
 
-    private void initOpenGL() {
+    private void initializeOpenGL() {
         glfwMakeContextCurrent(window);
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.
@@ -75,6 +81,18 @@ public class Game extends Thread {
         glEnable(GL_CULL_FACE);
 
         glfwSwapInterval(1);
+    }
+
+    private void addSystems() {
+        this.systems.add(new RenderSystem());
+    }
+
+    private void initializeSystems() {
+        this.systems.forEach(GameSystem::start);
+    }
+
+    private void removeSystems() {
+        this.systems.forEach(GameSystem::stop);
     }
 
     private void debug() {
