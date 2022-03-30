@@ -7,61 +7,30 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class EntityTest {
 
-    static class TestEntity {
-
-        private static final int UNINITIALIZED = -1;
-        private final String name;
-        private final IdManager idManager;
-        private final int id;
-        private ComponentManager componentManager;
+    static class TestEntity extends GameObject {
 
         public TestEntity() {
-            this.name = "Test";
-            this.idManager = IdManager.getInstance();
-            this.id = TestEntity.this.idManager.getNewId();
+            super("Test");
         }
 
         protected void start() {
             addComponent(TestComponent.class);
         }
-
-        public void initialize(ComponentManager componentManager) {
-            if (id != UNINITIALIZED) {
-                this.componentManager = componentManager;
-                start();
-            } else {
-                throw new IllegalStateException(String.format("Entity %s is already initialized", name));
-            }
-        }
-
-        public <C extends Component> C addComponent(Class<C> componentClass) {
-            return this.componentManager.addComponent(id, componentClass);
-        }
-
-        public <C extends Component> C getComponent(Class<C> componentClass) {
-            return this.componentManager.getComponent(id, componentClass);
-        }
-
-        public final void destroy() {
-            componentManager.removeEntity(id);
-            idManager.removeId(id);
-        }
-
-        protected void onDestroy() {}
     }
 
+    IdManager idManager = new IdManager();
     ComponentManager componentManager = new ComponentManager();
 
     @BeforeEach
     void setup() {
+        ComponentRegistry.getInstance().registerComponent(Transform.class);
         ComponentRegistry.getInstance().registerComponent(TestComponent.class);
-        IdManager.getInstance().reset();
     }
 
     @Test
     void shouldAddAndGetComponent() {
         var entity = new TestEntity();
-        entity.initialize(componentManager);
+        entity.initialize(idManager, componentManager);
 
         var component = entity.getComponent(TestComponent.class);
         assertThat(component).isInstanceOf(TestComponent.class);

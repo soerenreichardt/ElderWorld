@@ -5,20 +5,23 @@ public abstract class GameObject {
     private static final int UNINITIALIZED = -1;
 
     private final String name;
-    private final IdManager idManager;
-    private final int id;
 
+    private IdManager idManager;
     private ComponentManager componentManager;
     protected Transform transform;
 
+    private int id;
+
     public GameObject(String name) {
         this.name = name;
-        this.idManager = IdManager.getInstance();
-        this.id = GameObject.this.idManager.getNewId();
+        this.id = UNINITIALIZED;
     }
 
-    public void initialize(ComponentManager componentManager) {
-        if (id != UNINITIALIZED) {
+    public void initialize(IdManager idManager, ComponentManager componentManager) {
+        if (id == UNINITIALIZED) {
+            this.id = idManager.getNewId();
+
+            this.idManager = idManager;
             this.componentManager = componentManager;
             this.transform = addComponent(Transform.class);
             start();

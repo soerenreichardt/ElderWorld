@@ -1,7 +1,6 @@
 package org.elder.core;
 
 import org.elder.core.ecs.GameSystem;
-import org.elder.core.ecs.IdManager;
 import org.elder.core.rendering.RenderSystem;
 import org.elder.geometry.Square;
 import org.lwjgl.opengl.GL;
@@ -68,7 +67,6 @@ public class Game extends Thread {
 
     public void setActiveScene(Scene scene) {
         if (activeScene != scene) {
-            IdManager.getInstance().reset();
             activeScene = scene;
             systems.forEach(system -> system.onSceneChanged(scene));
         }

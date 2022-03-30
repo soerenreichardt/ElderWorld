@@ -36,6 +36,10 @@ public class ComponentRegistry {
     }
 
     public ComponentManager.ComponentFactory<? extends Component> getComponentFactory(Class<? extends Component> componentClass) {
-        return this.componentFactories.get(componentClass);
+        var componentFactory = this.componentFactories.get(componentClass);
+        if (componentFactory == null) {
+            throw new IllegalArgumentException(String.format("No component factory for class %s was found", componentClass.getSimpleName()));
+        }
+        return componentFactory;
     }
 }

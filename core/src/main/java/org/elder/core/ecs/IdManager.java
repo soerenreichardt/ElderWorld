@@ -4,16 +4,10 @@ import org.eclipse.collections.impl.stack.mutable.primitive.IntArrayStack;
 
 public class IdManager {
 
-    private static final IdManager INSTANCE = new IdManager();
-
-    public static IdManager getInstance() {
-        return INSTANCE;
-    }
-
     private final IntArrayStack freeIds;
     private int maxEntityId;
 
-    private IdManager() {
+    public IdManager() {
         this.freeIds = new IntArrayStack();
         this.maxEntityId = 0;
     }
