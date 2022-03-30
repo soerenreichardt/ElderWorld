@@ -1,6 +1,8 @@
 package org.elder.core;
 
+import org.elder.core.ecs.ComponentManager;
 import org.elder.core.ecs.GameSystem;
+import org.elder.core.ecs.IdManager;
 import org.elder.core.rendering.RenderSystem;
 import org.elder.geometry.Square;
 import org.lwjgl.opengl.GL;
@@ -20,6 +22,8 @@ public class Game extends Thread {
     private final int height;
 
     private final List<GameSystem> systems;
+
+    private Scene activeScene;
 
     public Game(
             BooleanSupplier shouldCloseFn,
@@ -62,6 +66,16 @@ public class Game extends Thread {
         }
 
         removeSystems();
+    }
+
+    public void setActiveScene(Scene scene) {
+        if (activeScene != scene) {
+            systems.forEach(GameSystem::reset);
+            ComponentManager.getInstance().removeAllComponents();
+            IdManager.getInstance().reset();
+            activeScene = scene;
+            // TODO re-add new game objects components to component manager
+        }
     }
 
     private void initializeOpenGL() {

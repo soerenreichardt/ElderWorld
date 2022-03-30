@@ -67,6 +67,10 @@ public class ComponentManager {
         components.get(componentClass).set(entityId, null);
     }
 
+    public void removeAllComponents() {
+        components.values().forEach(List::clear);
+    }
+
     @FunctionalInterface
     interface ComponentFactory<C extends Component> {
          C create();

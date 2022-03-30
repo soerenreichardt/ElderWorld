@@ -31,6 +31,9 @@ public class Shader {
     private int program;
     private int positionMatrix;
 
+    private int vertexShader;
+    private int fragmentShader;
+
     public Shader(String vertexShaderPath, String fragmentShaderPath, GLCapabilities capabilities) {
         this.vertexShaderPath = vertexShaderPath;
         this.fragmentShaderPath = fragmentShaderPath;
@@ -40,8 +43,8 @@ public class Shader {
     }
 
     public void compile() {
-        var vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        var fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+        vertexShader = glCreateShader(GL_VERTEX_SHADER);
+        fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
         compileShader(vertexShaderPath, vertexShader);
         compileShader(fragmentShaderPath, fragmentShader);
@@ -70,6 +73,14 @@ public class Shader {
             throw new IllegalStateException("Expected shader to be compiled and linked to a program");
         }
         glUseProgram(program);
+    }
+
+    public void delete() {
+        if (program != UNINITIALIZED) {
+            glDeleteShader(vertexShader);
+            glDeleteShader(fragmentShader);
+            glDeleteProgram(program);
+        }
     }
 
     public int positionMatrixLocation() {

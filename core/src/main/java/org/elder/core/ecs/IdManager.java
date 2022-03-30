@@ -29,4 +29,9 @@ public class IdManager {
     public void removeId(int id) {
         freeIds.push(id);
     }
+
+    public void reset() {
+        freeIds.clear();
+        maxEntityId = 0;
+    }
 }

@@ -33,7 +33,10 @@ public class RenderSystem implements GameSystem {
         glBindVertexArray(vao);
 
         for (Mesh mesh : meshComponents) {
-            var indices = createOpenGLBuffers(mesh);
+            int vbo = glGenBuffers();
+            int ibo = glGenBuffers();
+            var indices = fillOpenGLBuffers(mesh, vbo, ibo);
+
             var shader = mesh.shader;
             shader.compile();
 
@@ -41,19 +44,21 @@ public class RenderSystem implements GameSystem {
             glEnableVertexAttribArray(positionMatrixLocation);
             glVertexAttribPointer(positionMatrixLocation, 2, GL_FLOAT, false, 0, 0L);
 
-            buffersList.add(new RenderObject(indices, mesh.transform, shader));
+            buffersList.add(new RenderObject(indices, mesh.transform, shader, vbo, ibo));
         }
     }
 
     @Override
     public void stop() {
-        glDeleteVertexArrays(vao);
+        cleanUp();
     }
 
-    private int createOpenGLBuffers(Mesh mesh) {
-        int vbo = glGenBuffers();
-        int ibo = glGenBuffers();
+    @Override
+    public void reset() {
+        cleanUp();
+    }
 
+    private int fillOpenGLBuffers(Mesh mesh, int vbo, int ibo) {
         var vertexBuffer = BufferUtils.createFloatBuffer(mesh.vertices.length * 2);
         Vector2f[] vertices = mesh.vertices;
         for (Vector2f vertex : vertices) {
@@ -90,9 +95,20 @@ public class RenderSystem implements GameSystem {
         glUseProgram(0);
     }
 
+    private void cleanUp() {
+        glDeleteVertexArrays(vao);
+        buffersList.forEach(renderObject -> {
+            glDeleteBuffers(renderObject.vbo());
+            glDeleteBuffers(renderObject.ibo());
+            renderObject.shader().delete();
+        });
+    }
+
     record RenderObject(
             int numTriangles,
             Transform transform,
-            Shader shader
+            Shader shader,
+            int vbo,
+            int ibo
     ) {}
 }
