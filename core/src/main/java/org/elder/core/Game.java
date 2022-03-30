@@ -1,6 +1,5 @@
 package org.elder.core;
 
-import org.elder.core.ecs.ComponentManager;
 import org.elder.core.ecs.GameSystem;
 import org.elder.core.ecs.IdManager;
 import org.elder.core.rendering.RenderSystem;
@@ -42,9 +41,8 @@ public class Game extends Thread {
     public void run() {
         initializeOpenGL();
 
-        debug();
-
         addSystems();
+        debug();
         initializeSystems();
 
         var lastTime = System.nanoTime();
@@ -70,11 +68,9 @@ public class Game extends Thread {
 
     public void setActiveScene(Scene scene) {
         if (activeScene != scene) {
-            systems.forEach(GameSystem::reset);
-            ComponentManager.getInstance().removeAllComponents();
             IdManager.getInstance().reset();
             activeScene = scene;
-            // TODO re-add new game objects components to component manager
+            systems.forEach(system -> system.onSceneChanged(scene));
         }
     }
 
@@ -110,6 +106,8 @@ public class Game extends Thread {
     }
 
     private void debug() {
-        new Square("Square");
+        var scene = new Scene("Debug Scene");
+        scene.addGameObject(new Square("Square"));
+        setActiveScene(scene);
     }
 }

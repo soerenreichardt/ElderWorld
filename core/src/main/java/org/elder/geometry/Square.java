@@ -20,10 +20,14 @@ public class Square extends GameObject {
             3, 1, 2
     };
 
-    private final Mesh mesh;
+    private Mesh mesh;
 
     public Square(String name) {
         super(name);
+    }
+
+    @Override
+    protected void start() {
         this.mesh = addComponent(Mesh.class);
 
         initializeMesh();

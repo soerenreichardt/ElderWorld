@@ -1,6 +1,6 @@
 package org.elder.core.rendering;
 
-import org.elder.core.ecs.ComponentManager;
+import org.elder.core.Scene;
 import org.elder.core.ecs.GameSystem;
 import org.elder.core.ecs.Transform;
 import org.joml.Vector2f;
@@ -15,16 +15,13 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class RenderSystem implements GameSystem {
 
-    private final List<Mesh> meshComponents;
-    private final List<RenderObject> buffersList;
+    private List<RenderObject> buffersList;
+    private List<Mesh> meshComponents;
     private int vao;
 
     public RenderSystem() {
-        this.meshComponents = ComponentManager
-                .getInstance()
-                .getComponentListReference(Mesh.class)
-                .orElseGet(List::of);
-        this.buffersList = new ArrayList<>(meshComponents.size());
+        this.buffersList = new ArrayList<>();
+        this.meshComponents = new ArrayList<>();
     }
 
     @Override
@@ -46,6 +43,14 @@ public class RenderSystem implements GameSystem {
 
             buffersList.add(new RenderObject(indices, mesh.transform, shader, vbo, ibo));
         }
+    }
+
+    @Override
+    public void onSceneChanged(Scene scene) {
+        cleanUp();
+        this.meshComponents = scene.componentManager().getComponentListReference(Mesh.class)
+                .orElseGet(List::of);
+        this.buffersList = new ArrayList<>(meshComponents.size());
     }
 
     @Override

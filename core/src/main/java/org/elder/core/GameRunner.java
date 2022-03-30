@@ -1,7 +1,7 @@
 package org.elder.core;
 
 import org.elder.core.ecs.Component;
-import org.elder.core.ecs.ComponentManager;
+import org.elder.core.ecs.ComponentRegistry;
 import org.elder.core.ecs.GameComponent;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
@@ -45,11 +45,11 @@ public class GameRunner {
     }
 
     private void registerComponents() {
-        var componentManager = ComponentManager.getInstance();
+        var componentRegistry = ComponentRegistry.getInstance();
         new Reflections("org.elder", Scanners.SubTypes.filterResultsBy(__ -> true))
                 .getSubTypesOf(Object.class)
                 .stream()
                 .filter(clazz -> clazz.isAnnotationPresent(GameComponent.class))
-                .forEach(clazz -> componentManager.registerComponent((Class<? extends Component>) clazz));
+                .forEach(clazz -> componentRegistry.registerComponent((Class<? extends Component>) clazz));
     }
 }

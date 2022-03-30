@@ -9,12 +9,12 @@ class ComponentManagerTest {
 
     @BeforeEach
     void setup() {
-        ComponentManager.getInstance().registerComponent(TestComponent.class);
+        ComponentRegistry.getInstance().registerComponent(TestComponent.class);
     }
 
     @Test
     void shouldAddMultipleComponents() {
-        var componentManager = ComponentManager.getInstance();
+        var componentManager = new ComponentManager();
 
         for (int i = 0; i < 10; i++) {
             componentManager.addComponent(i, TestComponent.class);
@@ -25,7 +25,7 @@ class ComponentManagerTest {
 
     @Test
     void shouldRemoveComponentsOfDeletedEntities() {
-        var componentManager = ComponentManager.getInstance();
+        var componentManager = new ComponentManager();
 
         for (int i = 0; i < 3; i++) {
             componentManager.addComponent(i, TestComponent.class);
