@@ -1,12 +1,14 @@
 package org.elder.core.ecs;
 
+import org.elder.core.Scene;
+
 public abstract class GameObject {
 
     private static final int UNINITIALIZED = -1;
 
     private final String name;
 
-    private IdManager idManager;
+    private Scene scene;
     private ComponentManager componentManager;
     protected Transform transform;
 
@@ -17,12 +19,12 @@ public abstract class GameObject {
         this.id = UNINITIALIZED;
     }
 
-    public void initialize(IdManager idManager, ComponentManager componentManager) {
-        if (id == UNINITIALIZED) {
-            this.id = idManager.getNewId();
+    public void initialize(int id, Scene scene) {
+        if (this.id == UNINITIALIZED) {
+            this.id = id;
 
-            this.idManager = idManager;
-            this.componentManager = componentManager;
+            this.scene = scene;
+            this.componentManager = scene.componentManager();
             this.transform = addComponent(Transform.class);
             start();
         } else {
@@ -41,7 +43,6 @@ public abstract class GameObject {
     }
 
     public final void destroy() {
-        componentManager.removeEntity(id);
-        idManager.removeId(id);
+        scene.removeGameObject(id);
     }
 }

@@ -22,8 +22,19 @@ public class Scene {
     }
 
     public void addGameObject(GameObject gameObject) {
-        gameObject.initialize(idManager, componentManager);
-        this.gameObjects.add(gameObject);
+        var id = idManager.getNewId();
+        gameObject.initialize(id, this);
+        if (id == gameObjects.size()) {
+            this.gameObjects.add(gameObject);
+        } else {
+            this.gameObjects.set(id, gameObject);
+        }
+    }
+
+    public void removeGameObject(int id) {
+        idManager.removeId(id);
+        componentManager.removeEntity(id);
+        gameObjects.remove(id);
     }
 
     public ComponentManager componentManager() {

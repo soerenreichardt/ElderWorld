@@ -1,5 +1,6 @@
 package org.elder.core.ecs;
 
+import org.elder.core.Scene;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,7 @@ class EntityTest {
     }
 
     IdManager idManager = new IdManager();
-    ComponentManager componentManager = new ComponentManager();
+    Scene scene = new Scene("Test");
 
     @BeforeEach
     void setup() {
@@ -30,7 +31,7 @@ class EntityTest {
     @Test
     void shouldAddAndGetComponent() {
         var entity = new TestEntity();
-        entity.initialize(idManager, componentManager);
+        entity.initialize(idManager.getNewId(), scene);
 
         var component = entity.getComponent(TestComponent.class);
         assertThat(component).isInstanceOf(TestComponent.class);

@@ -26,23 +26,7 @@ public class RenderSystem implements GameSystem {
 
     @Override
     public void start() {
-        vao = glGenVertexArrays();
-        glBindVertexArray(vao);
-
-        for (Mesh mesh : meshComponents) {
-            int vbo = glGenBuffers();
-            int ibo = glGenBuffers();
-            var indices = fillOpenGLBuffers(mesh, vbo, ibo);
-
-            var shader = mesh.shader;
-            shader.compile();
-
-            var positionMatrixLocation = shader.positionMatrixLocation();
-            glEnableVertexAttribArray(positionMatrixLocation);
-            glVertexAttribPointer(positionMatrixLocation, 2, GL_FLOAT, false, 0, 0L);
-
-            buffersList.add(new RenderObject(indices, mesh.transform, shader, vbo, ibo));
-        }
+        initialize();
     }
 
     @Override
@@ -51,15 +35,11 @@ public class RenderSystem implements GameSystem {
         this.meshComponents = scene.componentManager().getComponentListReference(Mesh.class)
                 .orElseGet(List::of);
         this.buffersList = new ArrayList<>(meshComponents.size());
+        initialize();
     }
 
     @Override
     public void stop() {
-        cleanUp();
-    }
-
-    @Override
-    public void reset() {
         cleanUp();
     }
 
@@ -86,6 +66,26 @@ public class RenderSystem implements GameSystem {
     @Override
     public void update(float delta) {
         buffersList.forEach(this::renderMesh);
+    }
+
+    private void initialize() {
+        vao = glGenVertexArrays();
+        glBindVertexArray(vao);
+
+        for (Mesh mesh : meshComponents) {
+            int vbo = glGenBuffers();
+            int ibo = glGenBuffers();
+            var indices = fillOpenGLBuffers(mesh, vbo, ibo);
+
+            var shader = mesh.shader;
+            shader.compile();
+
+            var positionMatrixLocation = shader.positionMatrixLocation();
+            glEnableVertexAttribArray(positionMatrixLocation);
+            glVertexAttribPointer(positionMatrixLocation, 2, GL_FLOAT, false, 0, 0L);
+
+            buffersList.add(new RenderObject(indices, mesh.transform, shader, vbo, ibo));
+        }
     }
 
     private void renderMesh(RenderObject obj) {
