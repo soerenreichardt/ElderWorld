@@ -29,7 +29,11 @@ public class Shader {
     private final String fragmentShaderPath;
     private final int version;
     private int program;
-    private int positionMatrix;
+
+    private int positionMatrixLocation;
+    private int modelUniformLocation;
+    private int viewUniformLocation;
+    private int projectionUniformLocation;
 
     private int vertexShader;
     private int fragmentShader;
@@ -62,7 +66,10 @@ public class Shader {
         }
 
         glUseProgram(program);
-        positionMatrix = glGetAttribLocation(program, "position");
+        positionMatrixLocation = glGetAttribLocation(program, "position");
+        modelUniformLocation = glGetUniformLocation(program, "model");
+        viewUniformLocation = glGetUniformLocation(program, "view");
+        projectionUniformLocation = glGetUniformLocation(program, "projection");
         glUseProgram(0);
 
         this.program = program;
@@ -84,7 +91,19 @@ public class Shader {
     }
 
     public int positionMatrixLocation() {
-        return this.positionMatrix;
+        return this.positionMatrixLocation;
+    }
+
+    public int modelMatrixUniformLocation() {
+        return this.modelUniformLocation;
+    }
+
+    public int viewMatrixUniformLocation() {
+        return this.viewUniformLocation;
+    }
+
+    public int projectionMatrixUniformLocation() {
+        return this.projectionUniformLocation;
     }
 
     private ByteBuffer readShaderFile(String shaderPath) {

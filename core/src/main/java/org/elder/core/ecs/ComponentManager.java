@@ -4,7 +4,7 @@ import java.util.*;
 
 public class ComponentManager {
 
-    private final Map<Class<? extends Component>, List<Component>> components;
+    private final Map<Class<? extends Component>, ArrayList<Component>> components;
     private final ComponentRegistry componentRegistry;
 
     public ComponentManager() {
@@ -16,11 +16,24 @@ public class ComponentManager {
         return Optional.ofNullable((List<T>) this.components.get(componentClass));
     }
 
+    public <T extends Component> Iterable<T> getComponentListIterable(Class<T> componentClass) {
+        return () -> new FilteringComponentListIterator<>(
+                getComponentListReference(componentClass)
+                        .orElseGet(List::of)
+                        .iterator()
+        );
+    }
+
     public <C extends Component> C addComponent(int entityId, Class<C> componentClass) {
         var componentFactory = this.componentRegistry.getComponentFactory(componentClass);
         var component = componentFactory.create();
         var componentList = this.components.computeIfAbsent(componentClass, __ -> new ArrayList<>());
         if (entityId == componentList.size()) {
+            componentList.add(component);
+        } else if (entityId > componentList.size()) {
+            for (int i = componentList.size(); i < entityId; i++) {
+                componentList.add(null);
+            }
             componentList.add(component);
         } else {
             componentList.set(entityId, component);

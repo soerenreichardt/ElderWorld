@@ -3,6 +3,7 @@ package org.elder.core;
 import org.elder.core.ecs.ComponentManager;
 import org.elder.core.ecs.GameObject;
 import org.elder.core.ecs.IdManager;
+import org.elder.core.rendering.Camera;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +14,15 @@ public class Scene {
     private final IdManager idManager;
     private final ComponentManager componentManager;
     private final List<GameObject> gameObjects;
+    private final Camera camera;
 
     public Scene(String name) {
         this.name = name;
         this.idManager = new IdManager();
         this.componentManager = new ComponentManager();
         this.gameObjects = new ArrayList<>();
+        this.camera = new Camera();
+        addGameObject(camera);
     }
 
     public void addGameObject(GameObject gameObject) {
@@ -41,4 +45,7 @@ public class Scene {
         return this.componentManager;
     }
 
+    public Camera camera() {
+        return this.camera;
+    }
 }

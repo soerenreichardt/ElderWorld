@@ -15,11 +15,15 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class RenderSystem implements GameSystem {
 
+    private final int width;
+    private final int height;
     private List<RenderObject> buffersList;
-    private List<Mesh> meshComponents;
-    private int vao;
+    private Iterable<Mesh> meshComponents;
+    private Camera camera;
 
-    public RenderSystem() {
+    public RenderSystem(int width, int height) {
+        this.width = width;
+        this.height = height;
         this.buffersList = new ArrayList<>();
         this.meshComponents = new ArrayList<>();
     }
@@ -32,15 +36,65 @@ public class RenderSystem implements GameSystem {
     @Override
     public void onSceneChanged(Scene scene) {
         cleanUp();
-        this.meshComponents = scene.componentManager().getComponentListReference(Mesh.class)
-                .orElseGet(List::of);
-        this.buffersList = new ArrayList<>(meshComponents.size());
+        this.meshComponents = scene.componentManager().getComponentListIterable(Mesh.class);
+        this.buffersList = new ArrayList<>();
+        this.camera = scene.camera();
         initialize();
     }
 
     @Override
     public void stop() {
         cleanUp();
+    }
+
+    @Override
+    public void update(float delta) {
+        buffersList.forEach(this::renderMesh);
+    }
+
+    private void initialize() {
+        initializeCamera();
+        for (Mesh mesh : meshComponents) {
+            var vao = glGenVertexArrays();
+            glBindVertexArray(vao);
+
+            int vbo = glGenBuffers();
+            int ibo = glGenBuffers();
+            var indices = fillOpenGLBuffers(mesh, vbo, ibo);
+
+            var shader = mesh.shader;
+            shader.compile();
+
+            var positionMatrixLocation = shader.positionMatrixLocation();
+            glEnableVertexAttribArray(positionMatrixLocation);
+            glVertexAttribPointer(positionMatrixLocation, 2, GL_FLOAT, false, 0, 0L);
+
+            buffersList.add(new RenderObject(indices, mesh.transform, shader, vao, vbo, ibo));
+        }
+    }
+
+    private void renderMesh(RenderObject obj) {
+        var shader = obj.shader();
+        shader.use();
+        glBindVertexArray(obj.vao());
+        glEnableVertexAttribArray(shader.positionMatrixLocation());
+
+        glUniformMatrix4fv(shader.modelMatrixUniformLocation(), false, obj.transform().getModelMatrix().get(new float[16]));
+        glUniformMatrix4fv(shader.viewMatrixUniformLocation(), false, camera.transform().getModelMatrix().get(new float[16]));
+        glUniformMatrix4fv(shader.projectionMatrixUniformLocation(), false, camera.projectionMatrix().get(new float[16]));
+
+        glDrawElements(GL_TRIANGLES, obj.numTriangles(), GL_UNSIGNED_INT, 0L);
+
+        glDisableVertexAttribArray(0);
+        glBindVertexArray(0);
+        glUseProgram(0);
+    }
+
+    private void initializeCamera() {
+        if (camera != null) {
+            var aspect = (float) width / height;
+            camera.projectionMatrix().setOrtho(-aspect, aspect, -1, 1, -1, 1);
+        }
     }
 
     private int fillOpenGLBuffers(Mesh mesh, int vbo, int ibo) {
@@ -63,48 +117,11 @@ public class RenderSystem implements GameSystem {
         return indexBuffer.capacity();
     }
 
-    @Override
-    public void update(float delta) {
-        buffersList.forEach(this::renderMesh);
-    }
-
-    private void initialize() {
-        vao = glGenVertexArrays();
-        glBindVertexArray(vao);
-
-        for (Mesh mesh : meshComponents) {
-            int vbo = glGenBuffers();
-            int ibo = glGenBuffers();
-            var indices = fillOpenGLBuffers(mesh, vbo, ibo);
-
-            var shader = mesh.shader;
-            shader.compile();
-
-            var positionMatrixLocation = shader.positionMatrixLocation();
-            glEnableVertexAttribArray(positionMatrixLocation);
-            glVertexAttribPointer(positionMatrixLocation, 2, GL_FLOAT, false, 0, 0L);
-
-            buffersList.add(new RenderObject(indices, mesh.transform, shader, vbo, ibo));
-        }
-    }
-
-    private void renderMesh(RenderObject obj) {
-        obj.shader().use();
-        glBindVertexArray(vao);
-        glEnableVertexAttribArray(0);
-
-        glDrawElements(GL_TRIANGLES, obj.numTriangles(), GL_UNSIGNED_INT, 0L);
-
-        glDisableVertexAttribArray(0);
-        glBindVertexArray(0);
-        glUseProgram(0);
-    }
-
     private void cleanUp() {
-        glDeleteVertexArrays(vao);
         buffersList.forEach(renderObject -> {
             glDeleteBuffers(renderObject.vbo());
             glDeleteBuffers(renderObject.ibo());
+            glDeleteVertexArrays(renderObject.vao());
             renderObject.shader().delete();
         });
     }
@@ -113,6 +130,7 @@ public class RenderSystem implements GameSystem {
             int numTriangles,
             Transform transform,
             Shader shader,
+            int vao,
             int vbo,
             int ibo
     ) {}

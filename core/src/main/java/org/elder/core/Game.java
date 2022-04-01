@@ -41,8 +41,9 @@ public class Game extends Thread {
         initializeOpenGL();
 
         addSystems();
-        debug();
         initializeSystems();
+
+        debug();
 
         var lastTime = System.nanoTime();
         while (!shouldCloseFn.getAsBoolean()) {
@@ -92,7 +93,7 @@ public class Game extends Thread {
     }
 
     private void addSystems() {
-        this.systems.add(new RenderSystem());
+        this.systems.add(new RenderSystem(width, height));
     }
 
     private void initializeSystems() {

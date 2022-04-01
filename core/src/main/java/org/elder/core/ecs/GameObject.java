@@ -34,6 +34,10 @@ public abstract class GameObject {
 
     protected abstract void start();
 
+    public Transform transform() {
+        return this.transform;
+    }
+
     public <C extends Component> C addComponent(Class<C> componentClass) {
         return this.componentManager.addComponent(id, componentClass);
     }
