@@ -16,4 +16,8 @@ public class Transform extends Component {
                 .scale(scale.x, scale.y, 1.0f)
                 .translate(position.x, position.y, 0.0f);
     }
+
+    public void scale(float newScale) {
+        scale.set(newScale, newScale);
+    }
 }

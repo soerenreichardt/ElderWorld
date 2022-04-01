@@ -106,7 +106,14 @@ public class Game extends Thread {
 
     private void debug() {
         var scene = new Scene("Debug Scene");
-        scene.addGameObject(new Square("Square"));
+        for (int i = 0; i < 10; i++) {
+            var square = new Square("Square" + i);
+            scene.addGameObject(square);
+            square.transform().scale(0.1f);
+            var xPos = (float) Math.random() * 18 - 9;
+            var yPos = (float) Math.random() * 18 - 9;
+            square.transform().position.set(xPos, yPos);
+        }
         setActiveScene(scene);
     }
 }

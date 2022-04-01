@@ -25,7 +25,7 @@ public class RenderSystem implements GameSystem {
         this.width = width;
         this.height = height;
         this.buffersList = new ArrayList<>();
-        this.meshComponents = new ArrayList<>();
+        this.meshComponents = List.of();
     }
 
     @Override
@@ -36,7 +36,7 @@ public class RenderSystem implements GameSystem {
     @Override
     public void onSceneChanged(Scene scene) {
         cleanUp();
-        this.meshComponents = scene.componentManager().getComponentListIterable(Mesh.class);
+        this.meshComponents = scene.componentManager().getFilteringComponentListIterable(Mesh.class);
         this.buffersList = new ArrayList<>();
         this.camera = scene.camera();
         initialize();

@@ -16,7 +16,7 @@ public class ComponentManager {
         return Optional.ofNullable((List<T>) this.components.get(componentClass));
     }
 
-    public <T extends Component> Iterable<T> getComponentListIterable(Class<T> componentClass) {
+    public <T extends Component> Iterable<T> getFilteringComponentListIterable(Class<T> componentClass) {
         return () -> new FilteringComponentListIterator<>(
                 getComponentListReference(componentClass)
                         .orElseGet(List::of)
