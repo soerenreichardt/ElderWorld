@@ -82,6 +82,10 @@ public class Shader {
         glUseProgram(program);
     }
 
+    public void unUse() {
+        glUseProgram(0);
+    }
+
     public void delete() {
         if (program != UNINITIALIZED) {
             glDeleteShader(vertexShader);

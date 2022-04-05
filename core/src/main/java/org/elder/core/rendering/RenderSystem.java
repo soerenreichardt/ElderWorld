@@ -16,15 +16,11 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class RenderSystem implements GameSystem {
 
-    private final int width;
-    private final int height;
     private List<RenderObject> buffersList;
     private Iterable<Mesh> meshComponents;
     private Camera camera;
 
-    public RenderSystem(int width, int height) {
-        this.width = width;
-        this.height = height;
+    public RenderSystem() {
         this.buffersList = new ArrayList<>();
         this.meshComponents = Collections.emptyList();
     }
@@ -65,6 +61,10 @@ public class RenderSystem implements GameSystem {
             var shader = mesh.shader;
             shader.compile();
 
+            shader.use();
+            glUniformMatrix4fv(shader.projectionMatrixUniformLocation(), false, camera.projectionMatrix().get(new float[16]));
+            shader.unUse();
+
             var positionMatrixLocation = shader.positionMatrixLocation();
             glEnableVertexAttribArray(positionMatrixLocation);
             glVertexAttribPointer(positionMatrixLocation, 2, GL_FLOAT, false, 0, 0L);
@@ -81,7 +81,6 @@ public class RenderSystem implements GameSystem {
 
         glUniformMatrix4fv(shader.modelMatrixUniformLocation(), false, obj.transform().getModelMatrix().get(new float[16]));
         glUniformMatrix4fv(shader.viewMatrixUniformLocation(), false, camera.viewMatrix().get(new float[16]));
-        glUniformMatrix4fv(shader.projectionMatrixUniformLocation(), false, camera.projectionMatrix().get(new float[16]));
 
         glDrawElements(GL_TRIANGLES, obj.numTriangles(), GL_UNSIGNED_INT, 0L);
 

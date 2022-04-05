@@ -55,8 +55,6 @@ public class Game extends Thread {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            glViewport(0, 0, width, height);
-
             systems.forEach(system -> system.update(dt));
 
             glfwSwapBuffers(window); // swap the color buffers
@@ -89,12 +87,14 @@ public class Game extends Thread {
         glEnable(GL_BLEND);
         glEnable(GL_CULL_FACE);
 
+        glViewport(0, 0, width, height);
+
         glfwSwapInterval(1);
     }
 
     private void addSystems() {
         this.systems.add(new PositioningSystem());
-        this.systems.add(new RenderSystem(width, height));
+        this.systems.add(new RenderSystem());
     }
 
     private void initializeSystems() {

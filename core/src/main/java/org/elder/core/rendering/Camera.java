@@ -7,9 +7,12 @@ public class Camera extends GameObject {
 
     private static final String MAIN_CAMERA_NAME = "MainCamera";
     private static final float FOV = (float) Math.toRadians(60.0f);
+    private static final float Z_NEAR = 0.01f;
+    private static final float Z_FAR = 1000.0f;
 
     private final boolean isMainCamera;
-    private final Matrix4f projection;
+    private final Matrix4f projectionMatrix;
+    private final Matrix4f viewMatrix;
     private final CameraMode cameraMode;
     private float distance;
 
@@ -26,8 +29,12 @@ public class Camera extends GameObject {
         super(name);
         this.cameraMode = cameraMode;
         this.isMainCamera = false;
-        this.projection = new Matrix4f();
-        this.distance = 0.0f;
+        this.projectionMatrix = new Matrix4f();
+        this.viewMatrix = new Matrix4f();
+        this.distance = switch (cameraMode) {
+            case PERSPECTIVE -> 1.0f;
+            case ORTHOGRAPHIC -> 0.0f;
+        };
     }
 
     @Override
@@ -37,16 +44,19 @@ public class Camera extends GameObject {
     public void initializeProjectionMatrix(int width, int height) {
         var aspect = (float) width / height;
         switch (cameraMode) {
-            case PERSPECTIVE -> this.projection.setPerspective(FOV, aspect, 0.01f, 100.0f);
-            case ORTHOGRAPHIC -> this.projection.setOrtho(-aspect, aspect, -1, 1, -1, 1);
+            case PERSPECTIVE -> this.projectionMatrix.setPerspective(FOV, aspect, Z_NEAR, Z_FAR);
+            case ORTHOGRAPHIC -> this.projectionMatrix.setOrtho(-aspect, aspect, -1, 1, -1, 1);
         }
     }
 
     public Matrix4f projectionMatrix() {
-        return this.projection;
+        return this.projectionMatrix;
     }
 
     public Matrix4f viewMatrix() {
-        return this.transform.getModelMatrix(distance);
+        viewMatrix.identity();
+        var position = transform.position;
+        viewMatrix.translate(-position.x, -position.y, -distance);
+        return viewMatrix;
     }
 }

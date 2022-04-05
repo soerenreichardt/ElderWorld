@@ -12,12 +12,8 @@ public class Transform extends Component {
     private final Matrix4f worldMatrix = new Matrix4f();
 
     public Matrix4f getModelMatrix() {
-        return getModelMatrix(0.0f);
-    }
-
-    public Matrix4f getModelMatrix(float distance) {
         return worldMatrix.identity()
-                .translate(position.x, position.y, distance)
+                .translate(position.x, position.y, 0.0f)
                 .rotateX((float) Math.toRadians(rotation.x))
                 .rotateY((float) Math.toRadians(rotation.y))
                 .scale(scale.x, scale.y, 1.0f);
