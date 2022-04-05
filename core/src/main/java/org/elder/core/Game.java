@@ -1,8 +1,10 @@
 package org.elder.core;
 
 import org.elder.core.ecs.GameSystem;
+import org.elder.core.physics.PositioningSystem;
 import org.elder.core.rendering.RenderSystem;
 import org.elder.geometry.Square;
+import org.joml.Vector2f;
 import org.lwjgl.opengl.GL;
 
 import java.util.ArrayList;
@@ -49,10 +51,11 @@ public class Game extends Thread {
         while (!shouldCloseFn.getAsBoolean()) {
             var currentTime = System.nanoTime();
             float dt = (currentTime - lastTime) * 1E-9f;
+            lastTime = currentTime;
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            glViewport(0, 0, width, height);
+            glViewport(0, 0, width * 2, height * 2);
 
             systems.forEach(system -> system.update(dt));
 
@@ -65,6 +68,7 @@ public class Game extends Thread {
     public void setActiveScene(Scene scene) {
         if (activeScene != scene) {
             activeScene = scene;
+            scene.camera().initializeProjectionMatrix(width, height);
             systems.forEach(system -> system.onSceneChanged(scene));
         }
     }
@@ -89,6 +93,7 @@ public class Game extends Thread {
     }
 
     private void addSystems() {
+        this.systems.add(new PositioningSystem());
         this.systems.add(new RenderSystem(width, height));
     }
 
@@ -109,6 +114,7 @@ public class Game extends Thread {
             var xPos = (float) Math.random() * 18 - 9;
             var yPos = (float) Math.random() * 18 - 9;
             square.transform().position.set(xPos, yPos);
+            square.velocity().rotation = new Vector2f((float) Math.random() * 0.1f, (float) Math.random() * 0.1f);
         }
         setActiveScene(scene);
     }

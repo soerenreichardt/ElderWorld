@@ -1,6 +1,7 @@
 package org.elder.geometry;
 
 import org.elder.core.ecs.GameObject;
+import org.elder.core.physics.Velocity;
 import org.elder.core.rendering.DefaultShader;
 import org.elder.core.rendering.Mesh;
 import org.joml.Vector2f;
@@ -21,6 +22,7 @@ public class Square extends GameObject {
     };
 
     private Mesh mesh;
+    private Velocity velocity;
 
     public Square(String name) {
         super(name);
@@ -29,8 +31,13 @@ public class Square extends GameObject {
     @Override
     protected void start() {
         this.mesh = addComponent(Mesh.class);
-
+        this.velocity = addComponent(Velocity.class);
+        this.velocity.transform = transform;
         initializeMesh();
+    }
+
+    public Velocity velocity() {
+        return this.velocity;
     }
 
     private void initializeMesh() {

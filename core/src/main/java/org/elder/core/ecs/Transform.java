@@ -9,10 +9,12 @@ public class Transform extends Component {
     public Vector2f scale = new Vector2f(1);
     public Vector2f rotation = new Vector2f();
 
+    private final Matrix4f worldMatrix = new Matrix4f();
+
     public Matrix4f getModelMatrix() {
-        return new Matrix4f()
-                .rotateX(rotation.x)
-                .rotateY(rotation.y)
+        return worldMatrix.identity()
+                .rotateX((float) Math.toRadians(rotation.x))
+                .rotateY((float) Math.toRadians(rotation.y))
                 .scale(scale.x, scale.y, 1.0f)
                 .translate(position.x, position.y, 0.0f);
     }

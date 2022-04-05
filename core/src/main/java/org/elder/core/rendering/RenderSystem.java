@@ -7,6 +7,7 @@ import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL15.*;
@@ -25,7 +26,7 @@ public class RenderSystem implements GameSystem {
         this.width = width;
         this.height = height;
         this.buffersList = new ArrayList<>();
-        this.meshComponents = List.of();
+        this.meshComponents = Collections.emptyList();
     }
 
     @Override
@@ -53,7 +54,6 @@ public class RenderSystem implements GameSystem {
     }
 
     private void initialize() {
-        initializeCamera();
         for (Mesh mesh : meshComponents) {
             var vao = glGenVertexArrays();
             glBindVertexArray(vao);
@@ -80,7 +80,7 @@ public class RenderSystem implements GameSystem {
         glEnableVertexAttribArray(shader.positionMatrixLocation());
 
         glUniformMatrix4fv(shader.modelMatrixUniformLocation(), false, obj.transform().getModelMatrix().get(new float[16]));
-        glUniformMatrix4fv(shader.viewMatrixUniformLocation(), false, camera.transform().getModelMatrix().get(new float[16]));
+        glUniformMatrix4fv(shader.viewMatrixUniformLocation(), false, camera.viewMatrix().get(new float[16]));
         glUniformMatrix4fv(shader.projectionMatrixUniformLocation(), false, camera.projectionMatrix().get(new float[16]));
 
         glDrawElements(GL_TRIANGLES, obj.numTriangles(), GL_UNSIGNED_INT, 0L);
@@ -88,13 +88,6 @@ public class RenderSystem implements GameSystem {
         glDisableVertexAttribArray(0);
         glBindVertexArray(0);
         glUseProgram(0);
-    }
-
-    private void initializeCamera() {
-        if (camera != null) {
-            var aspect = (float) width / height;
-            camera.projectionMatrix().setOrtho(-aspect, aspect, -1, 1, -1, 1);
-        }
     }
 
     private int fillOpenGLBuffers(Mesh mesh, int vbo, int ibo) {
