@@ -36,7 +36,7 @@ public class RenderSystem implements GameSystem {
     @Override
     public void onSceneChanged(Scene scene) {
         cleanUp();
-        this.meshComponents = scene.componentManager().getFilteringComponentListIterable(Mesh.class);
+        this.meshComponents = scene.componentManager().componentListIterable(Mesh.class);
         this.buffersList = new ArrayList<>();
         this.camera = scene.camera();
         initialize();
