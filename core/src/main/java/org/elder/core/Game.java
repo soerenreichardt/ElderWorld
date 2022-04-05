@@ -53,10 +53,6 @@ public class Game extends Thread {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
             glViewport(0, 0, width, height);
-            glMatrixMode(GL_PROJECTION);
-            float aspect = (float) width / height;
-            glLoadIdentity();
-            glOrtho(-aspect, aspect, -1, 1, -1, 1);
 
             systems.forEach(system -> system.update(dt));
 
