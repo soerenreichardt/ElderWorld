@@ -37,10 +37,8 @@ public class Camera extends GameObject {
     public void initializeProjectionMatrix(int width, int height) {
         var aspect = (float) width / height;
         switch (cameraMode) {
-            case PERSPECTIVE -> this.projection.setPerspective(FOV, aspect, -1f, 1f);
-            case ORTHOGRAPHIC -> {
-                this.projection.setOrtho(-aspect, aspect, -1, 1, -1, 1);
-            }
+            case PERSPECTIVE -> this.projection.setPerspective(FOV, aspect, 0.01f, 100.0f);
+            case ORTHOGRAPHIC -> this.projection.setOrtho(-aspect, aspect, -1, 1, -1, 1);
         }
     }
 
@@ -49,14 +47,6 @@ public class Camera extends GameObject {
     }
 
     public Matrix4f viewMatrix() {
-        return this.transform.getModelMatrix().translate(0, 0, distance);
-    }
-
-    public void setDistance(float newDistance) {
-        this.distance = newDistance;
-    }
-
-    public float distance() {
-        return this.distance;
+        return this.transform.getModelMatrix(distance);
     }
 }

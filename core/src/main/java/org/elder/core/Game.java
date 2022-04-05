@@ -55,7 +55,7 @@ public class Game extends Thread {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            glViewport(0, 0, width * 2, height * 2);
+            glViewport(0, 0, width, height);
 
             systems.forEach(system -> system.update(dt));
 
@@ -111,10 +111,10 @@ public class Game extends Thread {
             var square = new Square("Square" + i);
             scene.addGameObject(square);
             square.transform().scale(0.1f);
-            var xPos = (float) Math.random() * 18 - 9;
-            var yPos = (float) Math.random() * 18 - 9;
+            var xPos = (float) Math.random();
+            var yPos = (float) Math.random();
             square.transform().position.set(xPos, yPos);
-            square.velocity().rotation = new Vector2f((float) Math.random() * 0.1f, (float) Math.random() * 0.1f);
+            square.velocity().rotation = new Vector2f((float) Math.random(), (float) Math.random());
         }
         setActiveScene(scene);
     }
