@@ -22,6 +22,7 @@ public class ComponentRegistry {
         ComponentManager.ComponentFactory<C> componentFactory = () -> {
             try {
                 var constructor = componentClass.getDeclaredConstructor();
+                constructor.setAccessible(true);
                 return (C) constructor.newInstance();
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(String.format(

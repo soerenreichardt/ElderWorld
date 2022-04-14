@@ -47,9 +47,9 @@ public class GameEngineRunner {
     private void registerComponents() {
         var componentRegistry = ComponentRegistry.getInstance();
         new Reflections("org.elder", Scanners.SubTypes.filterResultsBy(__ -> true))
-                .getSubTypesOf(Object.class)
+                .getSubTypesOf(Component.class)
                 .stream()
                 .filter(clazz -> clazz.isAnnotationPresent(GameComponent.class))
-                .forEach(clazz -> componentRegistry.registerComponent((Class<? extends Component>) clazz));
+                .forEach(componentRegistry::registerComponent);
     }
 }

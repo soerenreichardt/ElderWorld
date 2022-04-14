@@ -2,10 +2,12 @@ package org.elder.engine.physics;
 
 import org.elder.engine.Scene;
 import org.elder.engine.ecs.GameSystem;
+import org.elder.engine.ecs.UpdatableSystem;
 
 import java.util.Collections;
 
-public class PositioningSystem implements GameSystem {
+@GameSystem()
+public class PositioningSystem implements UpdatableSystem {
 
     private Iterable<Velocity> velocityComponents;
 

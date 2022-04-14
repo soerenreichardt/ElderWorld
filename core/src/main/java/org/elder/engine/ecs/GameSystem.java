@@ -1,9 +1,9 @@
 package org.elder.engine.ecs;
 
-import org.elder.engine.Scene;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-public interface GameSystem extends Lifecycle {
-    void update(float delta);
-
-    void onSceneChanged(Scene scene);
+@Retention(RetentionPolicy.RUNTIME)
+public @interface GameSystem {
+    Class<? extends UpdatableSystem>[] value() default {};
 }

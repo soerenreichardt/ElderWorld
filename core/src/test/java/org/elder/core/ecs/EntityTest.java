@@ -24,12 +24,13 @@ class EntityTest {
     }
 
     IdManager idManager = new IdManager();
-    Scene scene = new Scene("Test");
+    Scene scene;
 
     @BeforeEach
     void setup() {
         ComponentRegistry.getInstance().registerComponent(Transform.class);
         ComponentRegistry.getInstance().registerComponent(TestComponent.class);
+        scene = new Scene("Test");
     }
 
     @Test

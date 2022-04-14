@@ -1,14 +1,9 @@
 package org.elder.engine;
 
-import org.elder.engine.ecs.GameSystem;
-import org.elder.engine.physics.PositioningSystem;
-import org.elder.engine.rendering.RenderSystem;
 import org.elder.geometry.Square;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.BooleanSupplier;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -21,7 +16,7 @@ public class GameEngine extends Thread {
     private final int width;
     private final int height;
 
-    private final List<GameSystem> systems;
+    private final SystemManager systemManager;
 
     private Scene activeScene;
 
@@ -35,16 +30,15 @@ public class GameEngine extends Thread {
         this.window = window;
         this.width = width;
         this.height = height;
-        this.systems = new ArrayList<>();
+        this.systemManager = new SystemManager();
     }
 
     @Override
     public void run() {
         initializeOpenGL();
 
-        addSystems();
-        initializeSystems();
-
+        systemManager.loadSystems();
+        systemManager.start();
         debug();
 
         var lastTime = System.nanoTime();
@@ -55,19 +49,19 @@ public class GameEngine extends Thread {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            systems.forEach(system -> system.update(dt));
+            systemManager.update(dt);
 
             glfwSwapBuffers(window); // swap the color buffers
         }
 
-        removeSystems();
+        systemManager.stop();
     }
 
     public void setActiveScene(Scene scene) {
         if (activeScene != scene) {
             activeScene = scene;
             scene.camera().initializeProjectionMatrix(width, height);
-            systems.forEach(system -> system.onSceneChanged(scene));
+            systemManager.onSceneChanged(scene);
         }
     }
 
@@ -90,19 +84,6 @@ public class GameEngine extends Thread {
         glViewport(0, 0, width, height);
 
         glfwSwapInterval(1);
-    }
-
-    private void addSystems() {
-        this.systems.add(new PositioningSystem());
-        this.systems.add(new RenderSystem());
-    }
-
-    private void initializeSystems() {
-        this.systems.forEach(GameSystem::start);
-    }
-
-    private void removeSystems() {
-        this.systems.forEach(GameSystem::stop);
     }
 
     private void debug() {

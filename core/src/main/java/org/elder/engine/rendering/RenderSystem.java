@@ -3,6 +3,8 @@ package org.elder.engine.rendering;
 import org.elder.engine.Scene;
 import org.elder.engine.ecs.GameSystem;
 import org.elder.engine.ecs.Transform;
+import org.elder.engine.ecs.UpdatableSystem;
+import org.elder.engine.physics.PositioningSystem;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
@@ -15,7 +17,8 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
-public class RenderSystem implements GameSystem {
+@GameSystem({ PositioningSystem.class })
+public class RenderSystem implements UpdatableSystem {
 
     private List<RenderObject> buffersList;
     private Iterable<Mesh> meshComponents;
