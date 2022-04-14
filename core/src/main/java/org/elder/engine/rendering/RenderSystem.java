@@ -1,10 +1,11 @@
-package org.elder.core.rendering;
+package org.elder.engine.rendering;
 
-import org.elder.core.Scene;
-import org.elder.core.ecs.GameSystem;
-import org.elder.core.ecs.Transform;
+import org.elder.engine.Scene;
+import org.elder.engine.ecs.GameSystem;
+import org.elder.engine.ecs.Transform;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL20;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,7 +80,7 @@ public class RenderSystem implements GameSystem {
         glBindVertexArray(obj.vao());
         glEnableVertexAttribArray(shader.positionMatrixLocation());
 
-        glUniformMatrix4fv(shader.modelMatrixUniformLocation(), false, obj.transform().getModelMatrix().get(new float[16]));
+        GL20.glUniformMatrix4fv(shader.modelMatrixUniformLocation(), false, obj.transform().getModelMatrix().get(new float[16]));
         glUniformMatrix4fv(shader.viewMatrixUniformLocation(), false, camera.viewMatrix().get(new float[16]));
 
         glDrawElements(GL_TRIANGLES, obj.numTriangles(), GL_UNSIGNED_INT, 0L);

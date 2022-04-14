@@ -1,4 +1,4 @@
-package org.elder.core.ecs;
+package org.elder.engine.ecs;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;

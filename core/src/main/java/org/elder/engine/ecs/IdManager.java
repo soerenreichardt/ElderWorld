@@ -1,4 +1,4 @@
-package org.elder.core.ecs;
+package org.elder.engine.ecs;
 
 import org.eclipse.collections.impl.stack.mutable.primitive.IntArrayStack;
 

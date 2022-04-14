@@ -1,4 +1,4 @@
-package org.elder.core.ecs;
+package org.elder.engine.ecs;
 
 import java.util.Iterator;
 

@@ -1,6 +1,10 @@
 package org.elder.core.ecs;
 
-import org.elder.core.Scene;
+import org.elder.engine.Scene;
+import org.elder.engine.ecs.ComponentRegistry;
+import org.elder.engine.ecs.GameObject;
+import org.elder.engine.ecs.IdManager;
+import org.elder.engine.ecs.Transform;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,8 +1,8 @@
-package org.elder.core;
+package org.elder.engine;
 
-import org.elder.core.ecs.GameSystem;
-import org.elder.core.physics.PositioningSystem;
-import org.elder.core.rendering.RenderSystem;
+import org.elder.engine.ecs.GameSystem;
+import org.elder.engine.physics.PositioningSystem;
+import org.elder.engine.rendering.RenderSystem;
 import org.elder.geometry.Square;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL;
@@ -14,7 +14,7 @@ import java.util.function.BooleanSupplier;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
-public class Game extends Thread {
+public class GameEngine extends Thread {
 
     private final BooleanSupplier shouldCloseFn;
     private final long window;
@@ -25,7 +25,7 @@ public class Game extends Thread {
 
     private Scene activeScene;
 
-    public Game(
+    public GameEngine(
             BooleanSupplier shouldCloseFn,
             long window,
             int width,

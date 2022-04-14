@@ -1,8 +1,8 @@
-package org.elder.core.rendering;
+package org.elder.engine.rendering;
 
-import org.elder.core.ecs.Component;
-import org.elder.core.ecs.GameComponent;
-import org.elder.core.ecs.Transform;
+import org.elder.engine.ecs.Component;
+import org.elder.engine.ecs.GameComponent;
+import org.elder.engine.ecs.Transform;
 import org.joml.Vector2f;
 
 @GameComponent

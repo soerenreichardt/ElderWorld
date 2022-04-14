@@ -1,7 +1,7 @@
-package org.elder.core.physics;
+package org.elder.engine.physics;
 
-import org.elder.core.Scene;
-import org.elder.core.ecs.GameSystem;
+import org.elder.engine.Scene;
+import org.elder.engine.ecs.GameSystem;
 
 import java.util.Collections;
 

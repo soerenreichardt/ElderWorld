@@ -1,4 +1,4 @@
-package org.elder.core.ecs;
+package org.elder.engine.ecs;
 
 import org.eclipse.collections.api.list.primitive.MutableIntList;
 import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;

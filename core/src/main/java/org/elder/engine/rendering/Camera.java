@@ -1,6 +1,6 @@
-package org.elder.core.rendering;
+package org.elder.engine.rendering;
 
-import org.elder.core.ecs.GameObject;
+import org.elder.engine.ecs.GameObject;
 import org.joml.Matrix4f;
 
 public class Camera extends GameObject {

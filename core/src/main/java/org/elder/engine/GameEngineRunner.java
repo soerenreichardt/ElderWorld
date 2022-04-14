@@ -1,20 +1,20 @@
-package org.elder.core;
+package org.elder.engine;
 
-import org.elder.core.ecs.Component;
-import org.elder.core.ecs.ComponentRegistry;
-import org.elder.core.ecs.GameComponent;
+import org.elder.engine.ecs.Component;
+import org.elder.engine.ecs.ComponentRegistry;
+import org.elder.engine.ecs.GameComponent;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 
-public class GameRunner {
+public class GameEngineRunner {
 
     private int width;
     private int height;
 
-    public GameRunner(int width, int height) {
+    public GameEngineRunner(int width, int height) {
         this.width = width;
         this.height = height;
 
@@ -25,7 +25,7 @@ public class GameRunner {
         var window = new Window(width, height);
         window.initialize();
 
-        var game = new Game(window::shouldClose, window.getId(), width, height);
+        var game = new GameEngine(window::shouldClose, window.getId(), width, height);
         game.start();
         windowLoop(window);
 

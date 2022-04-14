@@ -1,9 +1,9 @@
 package org.elder.geometry;
 
-import org.elder.core.ecs.GameObject;
-import org.elder.core.physics.Velocity;
-import org.elder.core.rendering.DefaultShader;
-import org.elder.core.rendering.Mesh;
+import org.elder.engine.ecs.GameObject;
+import org.elder.engine.physics.Velocity;
+import org.elder.engine.rendering.DefaultShader;
+import org.elder.engine.rendering.Mesh;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL;
 

@@ -1,4 +1,4 @@
-package org.elder.core.ecs;
+package org.elder.engine.ecs;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;

@@ -1,9 +1,9 @@
-package org.elder.core;
+package org.elder.engine;
 
-import org.elder.core.ecs.ComponentManager;
-import org.elder.core.ecs.GameObject;
-import org.elder.core.ecs.IdManager;
-import org.elder.core.rendering.Camera;
+import org.elder.engine.ecs.ComponentManager;
+import org.elder.engine.ecs.GameObject;
+import org.elder.engine.ecs.IdManager;
+import org.elder.engine.rendering.Camera;
 
 import java.util.ArrayList;
 import java.util.List;

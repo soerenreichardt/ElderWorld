@@ -1,5 +1,6 @@
 package org.elder.core.ecs;
 
+import org.elder.engine.ecs.IdManager;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

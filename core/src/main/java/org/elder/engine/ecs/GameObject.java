@@ -1,6 +1,6 @@
-package org.elder.core.ecs;
+package org.elder.engine.ecs;
 
-import org.elder.core.Scene;
+import org.elder.engine.Scene;
 
 public abstract class GameObject {
 

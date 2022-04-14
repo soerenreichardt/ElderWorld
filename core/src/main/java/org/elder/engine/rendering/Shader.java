@@ -1,4 +1,4 @@
-package org.elder.core.rendering;
+package org.elder.engine.rendering;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GLCapabilities;
