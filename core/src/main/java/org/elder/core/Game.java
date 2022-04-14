@@ -111,8 +111,8 @@ public class Game extends Thread {
             var square = new Square("Square" + i);
             scene.addGameObject(square);
             square.transform().scale(0.1f);
-            var xPos = (float) Math.random();
-            var yPos = (float) Math.random();
+            var xPos = ((float) Math.random() * 2) - 1.0f;
+            var yPos = ((float) Math.random() * 2) - 1.0f;
             square.transform().position.set(xPos, yPos);
             square.velocity().rotation = new Vector2f((float) Math.random(), (float) Math.random());
         }
