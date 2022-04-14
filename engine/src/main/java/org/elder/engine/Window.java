@@ -85,4 +85,12 @@ public class Window {
     public long getId() {
         return this.window;
     }
+
+    public int width() {
+        return this.width;
+    }
+
+    public int height() {
+        return this.height;
+    }
 }

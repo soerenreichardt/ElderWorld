@@ -3,6 +3,7 @@ package org.elder.engine;
 import org.elder.engine.ecs.Component;
 import org.elder.engine.ecs.ComponentRegistry;
 import org.elder.engine.ecs.GameComponent;
+import org.elder.engine.input.KeyInputHandler;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
@@ -14,9 +15,13 @@ public class GameEngineRunner {
     private int width;
     private int height;
 
+    private final KeyInputHandler keyInputHandler;
+
     public GameEngineRunner(int width, int height) {
         this.width = width;
         this.height = height;
+
+        this.keyInputHandler = new KeyInputHandler();
 
         registerComponents();
     }
@@ -25,7 +30,9 @@ public class GameEngineRunner {
         var window = new Window(width, height);
         window.initialize();
 
-        var game = new GameEngine(window::shouldClose, window.getId(), width, height);
+        glfwSetKeyCallback(window.getId(), keyInputHandler);
+
+        var game = new GameEngine(window, keyInputHandler);
         game.start();
         windowLoop(window);
 

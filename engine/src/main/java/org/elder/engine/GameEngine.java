@@ -4,33 +4,22 @@ import org.elder.geometry.Square;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL;
 
-import java.util.function.BooleanSupplier;
-
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class GameEngine extends Thread {
 
-    private final BooleanSupplier shouldCloseFn;
-    private final long window;
-    private final int width;
-    private final int height;
+    private final Window window;
+    private final long windowId;
 
     private final SystemManager systemManager;
 
     private Scene activeScene;
 
-    public GameEngine(
-            BooleanSupplier shouldCloseFn,
-            long window,
-            int width,
-            int height
-    ) {
-        this.shouldCloseFn = shouldCloseFn;
+    public GameEngine(Window window, Resource... resources) {
         this.window = window;
-        this.width = width;
-        this.height = height;
-        this.systemManager = new SystemManager();
+        this.windowId = window.getId();
+        this.systemManager = new SystemManager(resources);
     }
 
     @Override
@@ -42,7 +31,7 @@ public class GameEngine extends Thread {
         debug();
 
         var lastTime = System.nanoTime();
-        while (!shouldCloseFn.getAsBoolean()) {
+        while (!window.shouldClose()) {
             var currentTime = System.nanoTime();
             float dt = (currentTime - lastTime) * 1E-9f;
             lastTime = currentTime;
@@ -51,7 +40,7 @@ public class GameEngine extends Thread {
 
             systemManager.update(dt);
 
-            glfwSwapBuffers(window); // swap the color buffers
+            glfwSwapBuffers(windowId); // swap the color buffers
         }
 
         systemManager.stop();
@@ -60,13 +49,13 @@ public class GameEngine extends Thread {
     public void setActiveScene(Scene scene) {
         if (activeScene != scene) {
             activeScene = scene;
-            scene.camera().initializeProjectionMatrix(width, height);
+            scene.camera().initializeProjectionMatrix(window.width(), window.height());
             systemManager.onSceneChanged(scene);
         }
     }
 
     private void initializeOpenGL() {
-        glfwMakeContextCurrent(window);
+        glfwMakeContextCurrent(windowId);
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.
         // LWJGL detects the context that is current in the current thread,
@@ -81,7 +70,7 @@ public class GameEngine extends Thread {
         glEnable(GL_BLEND);
         glEnable(GL_CULL_FACE);
 
-        glViewport(0, 0, width, height);
+        glViewport(0, 0, window.width(), window.height());
 
         glfwSwapInterval(1);
     }
