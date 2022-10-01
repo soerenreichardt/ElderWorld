@@ -18,6 +18,16 @@ public class ComponentManager {
                 .orElseGet(Collections::emptyIterator);
     }
 
+    public <T1 extends Component, T2 extends Component> Iterable<Pair<T1, T2>> compoundListIterable(Class<T1> class1, Class<T2> class2) {
+        var components1 = this.components.get(class1);
+        var components2 = this.components.get(class2);
+
+        if (components1 == null || components2 == null) {
+            return Collections.emptyList();
+        }
+        return () -> new ComponentPairIterator<>(components1, components2);
+    }
+
     public <C extends Component> C addComponent(int entityId, Class<C> componentClass) {
         var componentFactory = this.componentRegistry.getComponentFactory(componentClass);
         var component = componentFactory.create();
@@ -42,5 +52,10 @@ public class ComponentManager {
     @FunctionalInterface
     interface ComponentFactory<C extends Component> {
          C create();
+    }
+
+    public static class Pair<T1 extends Component, T2 extends Component> {
+        public T1 component1;
+        public T2 component2;
     }
 }

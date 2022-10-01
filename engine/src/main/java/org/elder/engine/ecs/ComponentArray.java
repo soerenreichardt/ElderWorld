@@ -39,6 +39,15 @@ public class ComponentArray implements Iterable<Component> {
     public void remove(int id) {
         var internalId = idMapping.get(id);
         components.set(internalId, null);
+        idMapping.set(id, -1);
+    }
+
+    public int size() {
+        return idManager.maxEntityId();
+    }
+
+    public boolean contains(int id) {
+        return idMapping.size() > id && idMapping.get(id) != -1;
     }
 
     @Override

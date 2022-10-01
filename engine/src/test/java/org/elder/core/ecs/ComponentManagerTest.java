@@ -69,4 +69,23 @@ class ComponentManagerTest {
         assertThat(componentList).size().isEqualTo(1);
     }
 
+    @Test
+    void shouldIterateThroughCompoundComponents() {
+        var componentManager = new ComponentManager();
+
+        componentManager.addComponent(0, TestComponent.class);
+        componentManager.addComponent(0, TestComponent2.class);
+        componentManager.addComponent(1, TestComponent.class);
+        componentManager.addComponent(2, TestComponent2.class);
+        componentManager.addComponent(3, TestComponent.class);
+        componentManager.addComponent(3, TestComponent2.class);
+
+        int counter = 0;
+        for (ComponentManager.Pair<TestComponent, TestComponent2> pair : componentManager.compoundListIterable(TestComponent.class, TestComponent2.class)) {
+            counter++;
+        }
+
+        assertThat(counter).isEqualTo(2);
+    }
+
 }

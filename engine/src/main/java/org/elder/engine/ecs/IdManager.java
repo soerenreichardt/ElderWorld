@@ -24,8 +24,7 @@ public class IdManager {
         freeIds.push(id);
     }
 
-    public void reset() {
-        freeIds.clear();
-        maxEntityId = 0;
+    public int maxEntityId() {
+        return maxEntityId;
     }
 }
