@@ -59,6 +59,9 @@ public class Shader {
         glBindFragDataLocation(program, 0, "outColor");
         glLinkProgram(program);
 
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
+
         printProgramInfoLog(program);
 
         if (glGetProgrami(program, GL_LINK_STATUS) != GL_TRUE) {
@@ -88,8 +91,6 @@ public class Shader {
 
     public void delete() {
         if (program != UNINITIALIZED) {
-            glDeleteShader(vertexShader);
-            glDeleteShader(fragmentShader);
             glDeleteProgram(program);
         }
     }
@@ -141,7 +142,6 @@ public class Shader {
             }
         }
     }
-
 
     public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
         ByteBuffer buffer;
