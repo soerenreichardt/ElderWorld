@@ -3,18 +3,15 @@ package org.elder.engine.physics;
 import org.elder.engine.Scene;
 import org.elder.engine.ecs.GameSystem;
 import org.elder.engine.ecs.UpdatableSystem;
-import org.elder.engine.input.KeyInputHandler;
 
 import java.util.Collections;
 
-@GameSystem
+@GameSystem({ ControlsSystem.class })
 public class PositioningSystem implements UpdatableSystem {
 
-    private final KeyInputHandler keyInputHandler;
     private Iterable<Velocity> velocityComponents;
 
-    public PositioningSystem(KeyInputHandler keyInputHandler) {
-        this.keyInputHandler = keyInputHandler;
+    public PositioningSystem() {
         this.velocityComponents = Collections.emptyList();
     }
 

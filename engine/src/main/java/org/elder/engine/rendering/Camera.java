@@ -1,7 +1,10 @@
 package org.elder.engine.rendering;
 
 import org.elder.engine.ecs.GameObject;
+import org.elder.engine.input.Controllable;
+import org.elder.engine.physics.Velocity;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 
 public class Camera extends GameObject {
 
@@ -39,6 +42,10 @@ public class Camera extends GameObject {
 
     @Override
     protected void start() {
+        addComponent(Controllable.class);
+        var velocity = addComponent(Velocity.class);
+        velocity.transform = transform;
+        velocity.maxVelocity = new Vector2f(0.1f, 0.1f);
     }
 
     public void initializeProjectionMatrix(int width, int height) {
@@ -58,7 +65,7 @@ public class Camera extends GameObject {
         var position = transform.position;
         viewMatrix.lookAt(
                 position.x, position.y, distance,
-                0, 0, 0,
+                position.x, position.y, 0,
                 0, 1, 0
         );
         return viewMatrix;
