@@ -57,6 +57,7 @@ public class SystemManager implements UpdatableSystem {
 
     @Override
     public void onSceneChanged(Scene scene) {
+        SceneRepository.setScene(scene);
         forEachSystem(system -> system.onSceneChanged(scene));
     }
 
