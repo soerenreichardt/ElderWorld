@@ -2,9 +2,9 @@ package org.elder.engine.ecs;
 
 import org.elder.engine.Scene;
 
-public abstract class GameObject {
+public abstract class AbstractGameObject {
 
-    private static final int UNINITIALIZED = -1;
+    public static final int UNINITIALIZED = -1;
 
     private final String name;
 
@@ -14,7 +14,7 @@ public abstract class GameObject {
 
     private int id;
 
-    public GameObject(String name) {
+    public AbstractGameObject(String name) {
         this.name = name;
         this.id = UNINITIALIZED;
     }

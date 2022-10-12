@@ -1,7 +1,7 @@
 package org.elder.engine;
 
+import org.elder.engine.ecs.AbstractGameObject;
 import org.elder.engine.ecs.ComponentManager;
-import org.elder.engine.ecs.GameObject;
 import org.elder.engine.ecs.IdManager;
 import org.elder.engine.rendering.Camera;
 
@@ -13,7 +13,7 @@ public class Scene {
     private final String name;
     private final IdManager idManager;
     private final ComponentManager componentManager;
-    private final List<GameObject> gameObjects;
+    private final List<AbstractGameObject> gameObjects;
     private final Camera camera;
 
     public Scene(String name) {
@@ -25,7 +25,7 @@ public class Scene {
         addGameObject(camera);
     }
 
-    public void addGameObject(GameObject gameObject) {
+    public void addGameObject(AbstractGameObject gameObject) {
         var id = idManager.getNewId();
         gameObject.initialize(id, this);
         if (id == gameObjects.size()) {

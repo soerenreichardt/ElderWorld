@@ -1,12 +1,12 @@
 package org.elder.engine.rendering;
 
-import org.elder.engine.ecs.GameObject;
+import org.elder.engine.ecs.AbstractGameObject;
 import org.elder.engine.input.Controllable;
 import org.elder.engine.physics.Velocity;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
-public class Camera extends GameObject {
+public class Camera extends AbstractGameObject {
 
     private static final String MAIN_CAMERA_NAME = "MainCamera";
     private static final float FOV = (float) Math.toRadians(60.0f);

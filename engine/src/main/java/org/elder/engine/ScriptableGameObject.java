@@ -1,8 +1,8 @@
 package org.elder.engine;
 
-import org.elder.engine.ecs.GameObject;
+import org.elder.engine.ecs.AbstractGameObject;
 
-public abstract class ScriptableGameObject extends GameObject implements CustomScript {
+public abstract class ScriptableGameObject extends AbstractGameObject implements CustomScript {
 
     public ScriptableGameObject(String name) {
         super(name);
