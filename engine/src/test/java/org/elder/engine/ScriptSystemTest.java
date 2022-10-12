@@ -1,9 +1,11 @@
 package org.elder.engine;
 
+import org.elder.engine.ecs.BasicScene;
 import org.elder.engine.ecs.ComponentRegistry;
 import org.elder.engine.ecs.Transform;
-import org.elder.engine.input.Controllable;
 import org.elder.engine.physics.Velocity;
+import org.joml.Vector2f;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,14 +20,18 @@ public class ScriptSystemTest {
     @BeforeEach
     void setup() {
         ComponentRegistry.getInstance().registerComponent(Transform.class);
-        ComponentRegistry.getInstance().registerComponent(Controllable.class);
         ComponentRegistry.getInstance().registerComponent(Velocity.class);
         ComponentRegistry.getInstance().registerComponent(Script.class);
     }
 
+    @AfterEach
+    void tearDown() {
+        SceneRepository.setScene(null);
+    }
+
     @Test
     void shouldExecuteCustomScript() {
-        var scene = new Scene("Test");
+        var scene = new BasicScene("Test");
         AtomicBoolean started = new AtomicBoolean(false);
         AtomicBoolean updated = new AtomicBoolean(false);
         var gameObject = new TestScriptableObject("ScriptableObject", started, updated);
@@ -37,6 +43,22 @@ public class ScriptSystemTest {
 
         assertThat(started.get()).isTrue();
         assertThat(updated.get()).isTrue();
+    }
+
+    @Test
+    void shouldSpawnNewComponents() {
+        var scene = new BasicScene("Test");
+        var gameObject = new NewGameObjectScriptableObject("ScriptableObject");
+        scene.addGameObject(gameObject);
+
+        SceneRepository.setScene(scene);
+        scriptSystem.start();
+        scriptSystem.onSceneChanged(scene);
+
+        var velocities = scene.componentManager().componentListIterable(Velocity.class).iterator();
+        assertThat(velocities.hasNext()).isTrue();
+        var velocity = velocities.next();
+        assertThat(velocity.velocity).isEqualTo(new Vector2f(13.37f, 13.37f));
     }
 
     static class TestScriptableObject extends ScriptableGameObject {
@@ -58,6 +80,24 @@ public class ScriptSystemTest {
         @Override
         public void update(float delta) {
             updated.set(true);
+        }
+    }
+
+    static class NewGameObjectScriptableObject extends ScriptableGameObject {
+        public NewGameObjectScriptableObject(String name) {
+            super(name);
+        }
+
+        @Override
+        public void initialize() {
+            var go = new GameObject("Foo");
+            var velocity = go.addComponent(Velocity.class);
+            velocity.velocity = new Vector2f(13.37f, 13.37f);
+        }
+
+        @Override
+        public void update(float delta) {
+
         }
     }
 }
