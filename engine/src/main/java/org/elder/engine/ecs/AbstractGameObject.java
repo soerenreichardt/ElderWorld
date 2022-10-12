@@ -1,14 +1,12 @@
 package org.elder.engine.ecs;
 
-import org.elder.engine.Scene;
-
 public abstract class AbstractGameObject {
 
     public static final int UNINITIALIZED = -1;
 
     private final String name;
 
-    private Scene scene;
+    private BasicScene scene;
     private ComponentManager componentManager;
     protected Transform transform;
 
@@ -19,7 +17,7 @@ public abstract class AbstractGameObject {
         this.id = UNINITIALIZED;
     }
 
-    public void initialize(int id, Scene scene) {
+    public void initialize(int id, BasicScene scene) {
         if (this.id == UNINITIALIZED) {
             this.id = id;
 

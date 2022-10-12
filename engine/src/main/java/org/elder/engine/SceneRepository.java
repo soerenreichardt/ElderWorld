@@ -1,13 +1,15 @@
 package org.elder.engine;
 
-public class SceneRepository {
-    private static Scene scene;
+import org.elder.engine.ecs.BasicScene;
 
-    public static void setScene(Scene scene) {
+public class SceneRepository {
+    private static BasicScene scene;
+
+    public static void setScene(BasicScene scene) {
         SceneRepository.scene = scene;
     }
 
-    public static Scene getScene() {
+    public static BasicScene getScene() {
         return SceneRepository.scene;
     }
 }

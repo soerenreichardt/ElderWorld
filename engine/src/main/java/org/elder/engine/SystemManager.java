@@ -1,5 +1,6 @@
 package org.elder.engine;
 
+import org.elder.engine.ecs.BasicScene;
 import org.elder.engine.ecs.GameSystem;
 import org.elder.engine.ecs.UpdatableSystem;
 import org.reflections.Reflections;
@@ -56,7 +57,7 @@ public class SystemManager implements UpdatableSystem {
     }
 
     @Override
-    public void onSceneChanged(Scene scene) {
+    public void onSceneChanged(BasicScene scene) {
         SceneRepository.setScene(scene);
         forEachSystem(system -> system.onSceneChanged(scene));
     }
