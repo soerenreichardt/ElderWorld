@@ -1,25 +1,23 @@
 package org.elder.engine.ecs;
 
-import org.elder.engine.Scene;
+public abstract class AbstractGameObject {
 
-public abstract class GameObject {
-
-    private static final int UNINITIALIZED = -1;
+    public static final int UNINITIALIZED = -1;
 
     private final String name;
 
-    private Scene scene;
+    private BasicScene scene;
     private ComponentManager componentManager;
     protected Transform transform;
 
     private int id;
 
-    public GameObject(String name) {
+    public AbstractGameObject(String name) {
         this.name = name;
         this.id = UNINITIALIZED;
     }
 
-    public void initialize(int id, Scene scene) {
+    public void initialize(int id, BasicScene scene) {
         if (this.id == UNINITIALIZED) {
             this.id = id;
 

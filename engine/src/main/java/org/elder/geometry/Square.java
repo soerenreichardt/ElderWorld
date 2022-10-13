@@ -1,13 +1,13 @@
 package org.elder.geometry;
 
-import org.elder.engine.ecs.GameObject;
+import org.elder.engine.ecs.AbstractGameObject;
 import org.elder.engine.physics.Velocity;
 import org.elder.engine.rendering.DefaultShader;
 import org.elder.engine.rendering.Mesh;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL;
 
-public class Square extends GameObject {
+public class Square extends AbstractGameObject {
 
     public static final Vector2f[] SQUARE_VERTICES = new Vector2f[] {
             new Vector2f(-1.0f, 1.0f),

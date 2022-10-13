@@ -1,6 +1,6 @@
 package org.elder.engine.physics;
 
-import org.elder.engine.Scene;
+import org.elder.engine.ecs.BasicScene;
 import org.elder.engine.ecs.ComponentManager;
 import org.elder.engine.ecs.GameSystem;
 import org.elder.engine.ecs.UpdatableSystem;
@@ -58,7 +58,7 @@ public class ControlsSystem implements UpdatableSystem {
     }
 
     @Override
-    public void onSceneChanged(Scene scene) {
+    public void onSceneChanged(BasicScene scene) {
         velocityControllableIterator = scene.componentManager().compoundListIterable(Velocity.class, Controllable.class);
     }
 }

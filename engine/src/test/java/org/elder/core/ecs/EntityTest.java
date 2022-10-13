@@ -1,8 +1,8 @@
 package org.elder.core.ecs;
 
 import org.elder.engine.Scene;
+import org.elder.engine.ecs.AbstractGameObject;
 import org.elder.engine.ecs.ComponentRegistry;
-import org.elder.engine.ecs.GameObject;
 import org.elder.engine.ecs.IdManager;
 import org.elder.engine.ecs.Transform;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class EntityTest {
 
-    static class TestEntity extends GameObject {
+    static class TestEntity extends AbstractGameObject {
 
         public TestEntity() {
             super("Test");

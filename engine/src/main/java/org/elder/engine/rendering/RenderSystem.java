@@ -1,6 +1,7 @@
 package org.elder.engine.rendering;
 
 import org.elder.engine.Scene;
+import org.elder.engine.ecs.BasicScene;
 import org.elder.engine.ecs.GameSystem;
 import org.elder.engine.ecs.Transform;
 import org.elder.engine.ecs.UpdatableSystem;
@@ -35,11 +36,11 @@ public class RenderSystem implements UpdatableSystem {
     }
 
     @Override
-    public void onSceneChanged(Scene scene) {
+    public void onSceneChanged(BasicScene scene) {
         cleanUp();
         this.meshComponents = scene.componentManager().componentListIterable(Mesh.class);
         this.buffersList = new ArrayList<>();
-        this.camera = scene.camera();
+        this.camera = ((Scene)scene).camera();
         initialize();
     }
 
