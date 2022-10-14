@@ -26,13 +26,13 @@ public class GameEngineRunner {
         registerComponents();
     }
 
-    public void start() throws InterruptedException {
+    public void start(GameExecutable gameExecutable) throws InterruptedException {
         var window = new Window(width, height);
         window.initialize();
 
         glfwSetKeyCallback(window.getId(), keyInputResource);
 
-        var game = new GameEngine(window, keyInputResource);
+        var game = new GameEngine(window, gameExecutable, keyInputResource);
         game.start();
         windowLoop(window);
 
