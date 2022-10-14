@@ -1,5 +1,6 @@
 package org.elder.engine;
 
+import org.elder.engine.api.GameExecutable;
 import org.elder.engine.ecs.Component;
 import org.elder.engine.ecs.ComponentRegistry;
 import org.elder.engine.ecs.GameComponent;

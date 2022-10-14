@@ -1,5 +1,7 @@
 package org.elder.engine;
 
+import org.elder.engine.api.GameEngineApi;
+import org.elder.engine.api.GameExecutable;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.*;

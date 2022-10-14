@@ -1,4 +1,6 @@
-package org.elder.engine;
+package org.elder.engine.api;
+
+import org.elder.engine.Scene;
 
 @FunctionalInterface
 public interface GameExecutable {

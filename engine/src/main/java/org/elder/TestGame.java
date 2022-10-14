@@ -1,8 +1,8 @@
 package org.elder;
 
-import org.elder.engine.GameEngineApi;
-import org.elder.engine.GameExecutable;
 import org.elder.engine.Scene;
+import org.elder.engine.api.GameEngineApi;
+import org.elder.engine.api.GameExecutable;
 import org.elder.geometry.Square;
 import org.joml.Vector2f;
 
