@@ -1,24 +1,30 @@
 package org.elder.engine;
 
-import org.elder.geometry.Square;
-import org.joml.Vector2f;
+import org.elder.engine.api.GameEngineApi;
+import org.elder.engine.api.GameExecutable;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
-public class GameEngine extends Thread {
+public class GameEngine extends Thread implements GameEngineApi<Scene> {
 
     private final Window window;
     private final long windowId;
 
+    private final GameExecutable gameExecutable;
     private final SystemManager systemManager;
 
     private Scene activeScene;
 
-    public GameEngine(Window window, Resource... resources) {
+    public GameEngine(
+            Window window,
+            GameExecutable gameExecutable,
+            Resource... resources
+    ) {
         this.window = window;
         this.windowId = window.getId();
+        this.gameExecutable = gameExecutable;
         this.systemManager = new SystemManager(resources);
     }
 
@@ -28,7 +34,7 @@ public class GameEngine extends Thread {
 
         systemManager.loadSystems();
         systemManager.start();
-        debug();
+        gameExecutable.execute(this);
 
         var lastTime = System.nanoTime();
         while (!window.shouldClose()) {
@@ -46,7 +52,12 @@ public class GameEngine extends Thread {
         systemManager.stop();
     }
 
-    public void setActiveScene(Scene scene) {
+    @Override
+    public void setScene(Scene scene) {
+        setActiveScene(scene);
+    }
+
+    private void setActiveScene(Scene scene) {
         if (activeScene != scene) {
             activeScene = scene;
             scene.camera().initializeProjectionMatrix(window.width(), window.height());
@@ -73,19 +84,5 @@ public class GameEngine extends Thread {
         glViewport(0, 0, window.width(), window.height());
 
         glfwSwapInterval(1);
-    }
-
-    private void debug() {
-        var scene = new Scene("Debug Scene");
-        for (int i = 0; i < 10; i++) {
-            var square = new Square("Square" + i);
-            scene.addGameObject(square);
-            square.transform().scale(0.1f);
-            var xPos = ((float) Math.random() * 2) - 1.0f;
-            var yPos = ((float) Math.random() * 2) - 1.0f;
-            square.transform().position.set(xPos, yPos);
-            square.velocity().rotation = new Vector2f((float) Math.random(), (float) Math.random());
-        }
-        setActiveScene(scene);
     }
 }

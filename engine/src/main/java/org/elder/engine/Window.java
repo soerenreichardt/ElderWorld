@@ -39,6 +39,10 @@ public class Window {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
+        // set the framebuffer to window size
+        // this is necessary for retina displays
+        glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
+
         // Create the window
         window = glfwCreateWindow(width, height, "Hello World!", NULL, NULL);
         if ( window == NULL )
