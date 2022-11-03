@@ -1,4 +1,5 @@
 rootProject.name = 'ElderWorld'
 
 include 'engine'
+include 'ecs'
 

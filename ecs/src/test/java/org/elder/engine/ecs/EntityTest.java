@@ -1,10 +1,5 @@
-package org.elder.core.ecs;
+package org.elder.engine.ecs;
 
-import org.elder.engine.Scene;
-import org.elder.engine.ecs.AbstractGameObject;
-import org.elder.engine.ecs.ComponentRegistry;
-import org.elder.engine.ecs.IdManager;
-import org.elder.engine.ecs.Transform;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,13 +19,13 @@ class EntityTest {
     }
 
     IdManager idManager = new IdManager();
-    Scene scene;
+    BasicScene scene;
 
     @BeforeEach
     void setup() {
         ComponentRegistry.getInstance().registerComponent(Transform.class);
         ComponentRegistry.getInstance().registerComponent(TestComponent.class);
-        scene = new Scene("Test");
+        scene = new BasicScene("Test");
     }
 
     @Test
