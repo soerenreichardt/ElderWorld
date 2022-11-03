@@ -8,6 +8,8 @@ import java.util.Iterator;
 
 public class ComponentArray implements Iterable<Component> {
 
+    public static final int EMPTY_ELEMENT = -1;
+
     private final IdManager idManager;
     private final IntArrayList idMapping;
     private final ArrayList<Component> components;
@@ -33,13 +35,15 @@ public class ComponentArray implements Iterable<Component> {
 
     public Component get(int id) {
         var internalId = idMapping.get(id);
-        return components.get(internalId);
+        return internalId == EMPTY_ELEMENT
+                ? null
+                : components.get(internalId);
     }
 
     public void remove(int id) {
         var internalId = idMapping.get(id);
         components.set(internalId, null);
-        idMapping.set(id, -1);
+        idMapping.set(id, EMPTY_ELEMENT);
     }
 
     public int size() {
@@ -47,7 +51,7 @@ public class ComponentArray implements Iterable<Component> {
     }
 
     public boolean contains(int id) {
-        return idMapping.size() > id && idMapping.get(id) != -1;
+        return idMapping.size() > id && idMapping.get(id) != EMPTY_ELEMENT;
     }
 
     @Override
@@ -57,7 +61,7 @@ public class ComponentArray implements Iterable<Component> {
 
     private static void ensureSize(MutableIntList list, int targetSize) {
         for (int i = list.size(); i < targetSize; i++) {
-            list.add(-1);
+            list.add(EMPTY_ELEMENT);
         }
     }
 }
