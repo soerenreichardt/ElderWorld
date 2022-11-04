@@ -1,5 +1,6 @@
 package org.elder.engine;
 
+import org.elder.engine.ecs.DependencyGraph;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;

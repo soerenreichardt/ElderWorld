@@ -1,8 +1,5 @@
-package org.elder.engine;
+package org.elder.engine.ecs;
 
-import org.elder.engine.ecs.BasicScene;
-import org.elder.engine.ecs.GameSystem;
-import org.elder.engine.ecs.UpdatableSystem;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 

@@ -1,4 +1,4 @@
-package org.elder.engine;
+package org.elder.engine.ecs;
 
 public interface Resource {
 }

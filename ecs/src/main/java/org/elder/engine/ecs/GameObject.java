@@ -1,6 +1,4 @@
-package org.elder.engine;
-
-import org.elder.engine.ecs.AbstractGameObject;
+package org.elder.engine.ecs;
 
 public class GameObject extends AbstractGameObject {
     public GameObject(String name) {
