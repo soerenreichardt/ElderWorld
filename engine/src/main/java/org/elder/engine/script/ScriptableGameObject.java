@@ -1,6 +1,6 @@
 package org.elder.engine.script;
 
-import org.elder.engine.ecs.AbstractGameObject;
+import org.elder.engine.ecs.api.AbstractGameObject;
 
 public abstract class ScriptableGameObject extends AbstractGameObject implements CustomScript {
 

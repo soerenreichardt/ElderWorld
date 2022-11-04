@@ -1,5 +1,9 @@
 package org.elder.engine.ecs;
 
+import org.elder.engine.ecs.api.BasicScene;
+import org.elder.engine.ecs.api.GameSystem;
+import org.elder.engine.ecs.api.Resource;
+import org.elder.engine.ecs.api.UpdatableSystem;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 

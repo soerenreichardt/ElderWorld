@@ -1,6 +1,6 @@
 package org.elder.engine;
 
-import org.elder.engine.ecs.BasicScene;
+import org.elder.engine.ecs.api.BasicScene;
 import org.elder.engine.rendering.Camera;
 
 public class Scene extends BasicScene {

@@ -1,4 +1,4 @@
-package org.elder.engine.ecs;
+package org.elder.engine.ecs.api;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

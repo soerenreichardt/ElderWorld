@@ -1,6 +1,10 @@
 package org.elder.engine;
 
-import org.elder.engine.ecs.*;
+import org.elder.engine.ecs.ComponentRegistry;
+import org.elder.engine.ecs.GameObject;
+import org.elder.engine.ecs.SceneRepository;
+import org.elder.engine.ecs.Transform;
+import org.elder.engine.ecs.api.BasicScene;
 import org.elder.engine.physics.Velocity;
 import org.elder.engine.script.Script;
 import org.elder.engine.script.ScriptSystem;

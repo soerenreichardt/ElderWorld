@@ -1,5 +1,6 @@
 package org.elder.engine.ecs;
 
+import org.elder.engine.ecs.api.GameComponent;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 

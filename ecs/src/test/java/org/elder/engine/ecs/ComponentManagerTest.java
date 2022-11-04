@@ -1,5 +1,6 @@
 package org.elder.engine.ecs;
 
+import org.elder.engine.ecs.api.GameComponent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

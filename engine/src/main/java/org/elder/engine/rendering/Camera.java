@@ -1,6 +1,6 @@
 package org.elder.engine.rendering;
 
-import org.elder.engine.ecs.AbstractGameObject;
+import org.elder.engine.ecs.api.AbstractGameObject;
 import org.elder.engine.input.Controllable;
 import org.elder.engine.physics.Velocity;
 import org.joml.Matrix4f;

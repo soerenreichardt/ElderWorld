@@ -1,8 +1,8 @@
 package org.elder.engine.physics;
 
-import org.elder.engine.ecs.BasicScene;
-import org.elder.engine.ecs.GameSystem;
-import org.elder.engine.ecs.UpdatableSystem;
+import org.elder.engine.ecs.api.BasicScene;
+import org.elder.engine.ecs.api.GameSystem;
+import org.elder.engine.ecs.api.UpdatableSystem;
 
 import java.util.Collections;
 

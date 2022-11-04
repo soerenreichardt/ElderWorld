@@ -1,4 +1,7 @@
-package org.elder.engine.ecs;
+package org.elder.engine.ecs.api;
+
+import org.elder.engine.ecs.ComponentManager;
+import org.elder.engine.ecs.IdManager;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,5 +1,7 @@
 package org.elder.engine.ecs;
 
+import org.elder.engine.ecs.api.BasicScene;
+
 public class SceneRepository {
     private static BasicScene scene;
 

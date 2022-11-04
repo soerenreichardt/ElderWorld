@@ -1,6 +1,6 @@
 package org.elder.engine.input;
 
-import org.elder.engine.ecs.Resource;
+import org.elder.engine.ecs.api.Resource;
 import org.lwjgl.glfw.GLFWKeyCallbackI;
 
 import static org.lwjgl.glfw.GLFW.*;

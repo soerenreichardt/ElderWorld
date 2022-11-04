@@ -1,6 +1,6 @@
 package org.elder.geometry;
 
-import org.elder.engine.ecs.AbstractGameObject;
+import org.elder.engine.ecs.api.AbstractGameObject;
 import org.elder.engine.physics.Velocity;
 import org.elder.engine.rendering.DefaultShader;
 import org.elder.engine.rendering.Mesh;

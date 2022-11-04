@@ -1,4 +1,8 @@
-package org.elder.engine.ecs;
+package org.elder.engine.ecs.api;
+
+import org.elder.engine.ecs.Component;
+import org.elder.engine.ecs.ComponentManager;
+import org.elder.engine.ecs.Transform;
 
 public abstract class AbstractGameObject {
 

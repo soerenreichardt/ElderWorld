@@ -1,10 +1,10 @@
 package org.elder.engine.rendering;
 
 import org.elder.engine.Scene;
-import org.elder.engine.ecs.BasicScene;
-import org.elder.engine.ecs.GameSystem;
 import org.elder.engine.ecs.Transform;
-import org.elder.engine.ecs.UpdatableSystem;
+import org.elder.engine.ecs.api.BasicScene;
+import org.elder.engine.ecs.api.GameSystem;
+import org.elder.engine.ecs.api.UpdatableSystem;
 import org.elder.engine.physics.PositioningSystem;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
