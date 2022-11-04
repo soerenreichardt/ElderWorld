@@ -2,8 +2,8 @@ package org.elder.engine;
 
 import org.elder.engine.api.GameEngineApi;
 import org.elder.engine.api.GameExecutable;
-import org.elder.engine.ecs.SystemManager;
 import org.elder.engine.ecs.api.Resource;
+import org.elder.engine.ecs.system.SystemManager;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -27,7 +27,12 @@ public class GameEngine extends Thread implements GameEngineApi<Scene> {
         this.window = window;
         this.windowId = window.getId();
         this.gameExecutable = gameExecutable;
-        this.systemManager = new SystemManager(resources);
+        this.systemManager = SystemManager
+                .builder()
+                .withReflection()
+                .withResources(resources)
+                .withPackagePrefix("org.elder")
+                .build();
     }
 
     @Override

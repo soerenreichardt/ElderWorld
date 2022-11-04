@@ -1,35 +1,29 @@
-package org.elder.engine.ecs;
+package org.elder.engine.ecs.system;
 
-import org.elder.engine.ecs.api.BasicScene;
+import org.elder.engine.ecs.DependencyGraph;
 import org.elder.engine.ecs.api.GameSystem;
 import org.elder.engine.ecs.api.Resource;
 import org.elder.engine.ecs.api.UpdatableSystem;
-import org.reflections.Reflections;
-import org.reflections.scanners.Scanners;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class SystemManager implements UpdatableSystem {
+class SystemLoader {
 
-    private final Map<Class<?>, Resource> resourceMap;
-    private final List<Set<UpdatableSystem>> tieredSystems;
-    private boolean systemsLoaded;
+    private final Stream<Class<? extends UpdatableSystem>> systemClassesStream;
+    private final Resource[] resources;
 
-    public SystemManager(Resource[] resources) {
-        this.resourceMap = toResourceMap(resources);
-        this.tieredSystems = new ArrayList<>();
-        this.systemsLoaded = false;
+    public SystemLoader(Stream<Class<? extends UpdatableSystem>> systemClassesStream, Resource[] resources) {
+        this.systemClassesStream = systemClassesStream;
+        this.resources = resources;
     }
 
-    public void loadSystems() {
-        var systemClassesWithDependencies = new Reflections("org.elder", Scanners.SubTypes.filterResultsBy(__ -> true))
-                .getSubTypesOf(UpdatableSystem.class)
-                .stream()
+    public List<Set<UpdatableSystem>> loadTieredSystems() {
+        var systemClassesWithDependencies = systemClassesStream
                 .filter(clazz -> clazz.isAnnotationPresent(GameSystem.class))
                 .collect(Collectors.toMap(
                         Function.identity(),
@@ -38,53 +32,28 @@ public class SystemManager implements UpdatableSystem {
 
         var dependencyGraph = DependencyGraph.fromClassesWithDependencies(systemClassesWithDependencies);
         var tieredSystemClasses = dependencyGraph.topologicalSort();
-        initializeTieredSystemClasses(tieredSystemClasses);
-        systemsLoaded = true;
+
+        var resourceMap = toResourceMap(resources);
+        return initializeTieredSystemClasses(tieredSystemClasses, resourceMap);
     }
 
-    @Override
-    public void start() {
-        forEachSystem(UpdatableSystem::start);
-    }
-
-    @Override
-    public void stop() {
-        forEachSystem(UpdatableSystem::stop);
-    }
-
-    @Override
-    public void update(float delta) {
-        forEachSystem(system -> system.update(delta));
-    }
-
-    @Override
-    public void onSceneChanged(BasicScene scene) {
-        SceneRepository.setScene(scene);
-        forEachSystem(system -> system.onSceneChanged(scene));
-    }
-
-    private void initializeTieredSystemClasses(List<Set<Class<? extends UpdatableSystem>>> tieredSystemClasses) {
+    private List<Set<UpdatableSystem>> initializeTieredSystemClasses(List<Set<Class<? extends UpdatableSystem>>> tieredSystemClasses, Map<Class<?>, Resource> resourceMap) {
         try {
+            List<Set<UpdatableSystem>> tieredSystems = new ArrayList<>();
             for (Set<Class<? extends UpdatableSystem>> systemClasses : tieredSystemClasses) {
                 var systems = new HashSet<UpdatableSystem>();
                 tieredSystems.add(systems);
                 for (Class<? extends UpdatableSystem> systemClass : systemClasses) {
                     var constructor = selectConstructor(systemClass);
-                    var arguments = getInjectableArguments(constructor);
-                    
+                    var arguments = getInjectableArguments(constructor, resourceMap);
+
                     systems.add(constructor.newInstance(arguments));
                 }
             }
+            return tieredSystems;
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-    }
-
-    private void forEachSystem(Consumer<UpdatableSystem> systemConsumer) {
-        if (!systemsLoaded) {
-            throw new IllegalStateException("SystemManager was not initialized");
-        }
-        tieredSystems.forEach(systemTier -> systemTier.forEach(systemConsumer));
     }
 
     private Constructor<? extends UpdatableSystem> selectConstructor(Class<? extends UpdatableSystem> systemClass) throws NoSuchMethodException {
@@ -99,13 +68,13 @@ public class SystemManager implements UpdatableSystem {
                 .orElseThrow(() -> new IllegalStateException("Could not find valid constructor with only `Resource` arguments"));
     }
 
-    private Object[] getInjectableArguments(Constructor<? extends UpdatableSystem> constructor) {
+    private Object[] getInjectableArguments(Constructor<? extends UpdatableSystem> constructor, Map<Class<?>, Resource> resourceMap) {
         return Arrays.stream(constructor.getParameterTypes())
                 .map(resourceMap::get)
                 .toArray();
     }
 
-    private static Map<Class<?>, Resource> toResourceMap(Resource[] resources) {
+    private Map<Class<?>, Resource> toResourceMap(Resource[] resources) {
         var resourceMap = new HashMap<Class<?>, Resource>();
         for (Resource resource : resources) {
             resourceMap.put(resource.getClass(), resource);
