@@ -29,7 +29,7 @@ public class GameEngine extends Thread implements GameEngineApi<Scene> {
         this.gameExecutable = gameExecutable;
         this.systemManager = SystemManager
                 .builder()
-                .withReflection()
+                .fromReflection()
                 .withResources(resources)
                 .withPackagePrefix("org.elder")
                 .build();

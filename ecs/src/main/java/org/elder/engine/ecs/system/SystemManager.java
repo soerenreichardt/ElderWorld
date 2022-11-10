@@ -3,10 +3,12 @@ package org.elder.engine.ecs.system;
 import org.elder.engine.ecs.SceneRepository;
 import org.elder.engine.ecs.api.BasicScene;
 import org.elder.engine.ecs.api.UpdatableSystem;
+import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class SystemManager implements UpdatableSystem {
 
@@ -47,6 +49,11 @@ public class SystemManager implements UpdatableSystem {
     public void onSceneChanged(BasicScene scene) {
         SceneRepository.setScene(scene);
         forEachSystem(system -> system.onSceneChanged(scene));
+    }
+
+    @TestOnly
+    Set<UpdatableSystem> loadedSystems() {
+        return this.tieredSystems.stream().flatMap(Set::stream).collect(Collectors.toSet());
     }
 
     private void forEachSystem(Consumer<UpdatableSystem> systemConsumer) {

@@ -4,6 +4,7 @@ import org.elder.engine.ecs.DependencyGraph;
 import org.elder.engine.ecs.api.GameSystem;
 import org.elder.engine.ecs.api.Resource;
 import org.elder.engine.ecs.api.UpdatableSystem;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -15,7 +16,7 @@ import java.util.stream.Stream;
 class SystemLoader {
 
     private final Stream<Class<? extends UpdatableSystem>> systemClassesStream;
-    private final Resource[] resources;
+    private final @Nullable Resource[] resources;
 
     public SystemLoader(Stream<Class<? extends UpdatableSystem>> systemClassesStream, Resource[] resources) {
         this.systemClassesStream = systemClassesStream;
@@ -74,7 +75,10 @@ class SystemLoader {
                 .toArray();
     }
 
-    private Map<Class<?>, Resource> toResourceMap(Resource[] resources) {
+    private Map<Class<?>, Resource> toResourceMap(@Nullable Resource[] resources) {
+        if (resources == null) {
+            return Map.of();
+        }
         var resourceMap = new HashMap<Class<?>, Resource>();
         for (Resource resource : resources) {
             resourceMap.put(resource.getClass(), resource);

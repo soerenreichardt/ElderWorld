@@ -1,12 +1,16 @@
 apply plugin: 'java-library'
 
 dependencies {
+    annotationProcessor 'org.jetbrains:annotations:16.0.2'
+
     implementation 'org.joml:joml:1.10.4'
 
     implementation 'org.eclipse.collections:eclipse-collections-api:11.0.0'
     implementation 'org.eclipse.collections:eclipse-collections:11.0.0'
 
     implementation 'org.reflections:reflections:0.10.2'
+
+    compileOnly 'org.jetbrains:annotations:16.0.2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testImplementation 'org.assertj:assertj-core:3.22.0'

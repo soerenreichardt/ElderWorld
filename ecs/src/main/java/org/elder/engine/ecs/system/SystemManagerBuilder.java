@@ -14,11 +14,11 @@ public class SystemManagerBuilder {
 
     private Resource[] resources;
 
-    public ReflectionSystemManagerBuilder withReflection() {
+    public ReflectionSystemManagerBuilder fromReflection() {
         return new ReflectionSystemManagerBuilder(this);
     }
 
-    public ListSystemManagerBuilder withList() {
+    public ListSystemManagerBuilder fromList() {
         return new ListSystemManagerBuilder(this);
     }
 
