@@ -39,7 +39,6 @@ public class GameEngine extends Thread implements GameEngineApi<Scene> {
     public void run() {
         initializeOpenGL();
 
-        systemManager.loadSystems();
         systemManager.start();
         gameExecutable.execute(this);
 

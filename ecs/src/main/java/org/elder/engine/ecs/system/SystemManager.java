@@ -25,13 +25,9 @@ public class SystemManager implements UpdatableSystem {
         this.systemsLoaded = false;
     }
 
-    public void loadSystems() {
-        this.tieredSystems = systemLoader.loadTieredSystems();
-        this.systemsLoaded = true;
-    }
-
     @Override
     public void start() {
+        loadSystems();
         forEachSystem(UpdatableSystem::start);
     }
 
@@ -52,8 +48,13 @@ public class SystemManager implements UpdatableSystem {
     }
 
     @TestOnly
-    Set<UpdatableSystem> loadedSystems() {
+    Set<UpdatableSystem> getLoadedSystems() {
         return this.tieredSystems.stream().flatMap(Set::stream).collect(Collectors.toSet());
+    }
+
+    private void loadSystems() {
+        this.tieredSystems = systemLoader.loadTieredSystems();
+        this.systemsLoaded = true;
     }
 
     private void forEachSystem(Consumer<UpdatableSystem> systemConsumer) {

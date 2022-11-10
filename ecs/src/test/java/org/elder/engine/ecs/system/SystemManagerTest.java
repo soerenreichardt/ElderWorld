@@ -14,10 +14,10 @@ class SystemManagerTest {
         var systemManager = SystemManager.builder().fromList()
                 .withSystemClass(TestSystem.class)
                 .build();
-        systemManager.loadSystems();
+        systemManager.start();
 
-        assertThat(systemManager.loadedSystems()).hasSize(1);
-        assertThat(systemManager.loadedSystems()).hasExactlyElementsOfTypes(TestSystem.class);
+        assertThat(systemManager.getLoadedSystems()).hasSize(1);
+        assertThat(systemManager.getLoadedSystems()).hasExactlyElementsOfTypes(TestSystem.class);
     }
 
     @Test
@@ -25,16 +25,16 @@ class SystemManagerTest {
         var systemManager = SystemManager.builder().fromReflection()
                 .withPackagePrefix("org.elder.engine.ecs.system.test")
                 .build();
-        systemManager.loadSystems();
+        systemManager.start();
 
-        assertThat(systemManager.loadedSystems()).hasSize(1);
-        assertThat(systemManager.loadedSystems()).hasExactlyElementsOfTypes(TestSystem.class);
+        assertThat(systemManager.getLoadedSystems()).hasSize(1);
+        assertThat(systemManager.getLoadedSystems()).hasExactlyElementsOfTypes(TestSystem.class);
     }
 
     @Test
     void shouldUpdateSceneRepositoryOnSceneChanged() {
         var systemManager = SystemManager.builder().fromList().build();
-        systemManager.loadSystems();
+        systemManager.start();
         assertThat(SceneRepository.getScene()).isNull();
 
         var scene = new BasicScene("Test");
