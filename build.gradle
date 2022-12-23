@@ -9,11 +9,6 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
-dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-}
-
 allprojects {
     apply plugin: 'java'
     apply plugin: 'base'
@@ -51,5 +46,10 @@ allprojects {
                 url = layout.buildDirectory.dir('repo')
             }
         }
+    }
+
+    dependencies {
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     }
 }
