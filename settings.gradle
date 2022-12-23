@@ -1,5 +1,8 @@
-rootProject.name = 'ElderWorld'
+rootProject.name = 'elder-world'
 
 include 'engine'
+project(':engine').name = 'engine'
+
 include 'ecs'
+project(':ecs').name = 'ecs'
 

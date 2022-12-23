@@ -1,5 +1,12 @@
+buildscript {
+    dependencies {
+        classpath "gradle.plugin.com.github.johnrengelman:shadow:7.1.2"
+    }
+}
+
 plugins {
     id 'java'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 dependencies {
@@ -8,12 +15,41 @@ dependencies {
 }
 
 allprojects {
+    apply plugin: 'java'
     apply plugin: 'base'
+    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'maven-publish'
 
     group = 'org.elder'
     version = '0.0.1'
 
+    java {
+        withSourcesJar()
+    }
+
     repositories {
         mavenCentral()
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = project.group
+                artifactId = project.name
+                version = project.version
+                from components.java
+
+                pom {
+                    name = 'My Library'
+                    description = 'A description of my library'
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                url = layout.buildDirectory.dir('repo')
+            }
+        }
     }
 }
