@@ -1,4 +1,4 @@
-package org.elder.engine;
+package org.elder.engine.client;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
