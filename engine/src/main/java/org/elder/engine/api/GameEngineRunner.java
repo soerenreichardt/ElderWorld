@@ -1,5 +1,7 @@
 package org.elder.engine.api;
 
-public interface GameEngineRunner {
-    void start(GameExecutable<?> gameExecutable) throws InterruptedException;
+import org.elder.engine.ecs.api.BasicScene;
+
+public interface GameEngineRunner<S extends BasicScene> {
+    void start(GameExecutable<S> gameExecutable) throws InterruptedException;
 }

@@ -1,5 +1,6 @@
 package org.elder.engine.client;
 
+import org.elder.engine.Scene;
 import org.elder.engine.api.GameEngineRunner;
 import org.elder.engine.api.GameExecutable;
 import org.elder.engine.ecs.Component;
@@ -12,7 +13,7 @@ import org.reflections.scanners.Scanners;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 
-public class ClientGameEngineRunner implements GameEngineRunner {
+public class ClientGameEngineRunner implements GameEngineRunner<Scene> {
 
     private int width;
     private int height;
@@ -29,7 +30,7 @@ public class ClientGameEngineRunner implements GameEngineRunner {
     }
 
     @Override
-    public void start(GameExecutable<?> gameExecutable) throws InterruptedException {
+    public void start(GameExecutable<Scene> gameExecutable) throws InterruptedException {
         var window = new Window(width, height);
         window.initialize();
 

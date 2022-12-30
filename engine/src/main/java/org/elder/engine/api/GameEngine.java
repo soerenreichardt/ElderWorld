@@ -1,6 +1,5 @@
 package org.elder.engine.api;
 
-import org.elder.engine.Scene;
 import org.elder.engine.ecs.api.BasicScene;
 import org.elder.engine.ecs.api.Resource;
 import org.elder.engine.ecs.system.SystemManager;
@@ -8,12 +7,12 @@ import org.elder.engine.ecs.system.SystemManagerBuilder;
 
 public abstract class GameEngine<S extends BasicScene> extends Thread implements GameEngineApi<S> {
 
-    protected final GameExecutable gameExecutable;
+    protected final GameExecutable<S> gameExecutable;
     protected final SystemManager systemManager;
 
-    protected Scene activeScene;
+    protected S activeScene;
 
-    protected GameEngine(GameExecutable gameExecutable, Resource[] resources) {
+    protected GameEngine(GameExecutable<S> gameExecutable, Resource[] resources) {
         this.gameExecutable = gameExecutable;
         this.systemManager = initializeSystemManager(SystemManager.builder(), resources);
     }
@@ -42,6 +41,14 @@ public abstract class GameEngine<S extends BasicScene> extends Thread implements
         }
 
         systemManager.stop();
+    }
+
+    @Override
+    public void setScene(S scene) {
+        if (activeScene != scene) {
+            activeScene = scene;
+            systemManager.onSceneChanged(scene);
+        }
     }
 
     protected abstract void initialize();

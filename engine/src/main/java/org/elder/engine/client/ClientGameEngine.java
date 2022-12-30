@@ -18,7 +18,7 @@ public class ClientGameEngine extends GameEngine<Scene> {
 
     public ClientGameEngine(
             Window window,
-            GameExecutable<?> gameExecutable,
+            GameExecutable<Scene> gameExecutable,
             Resource... resources
     ) {
         super(gameExecutable, resources);
