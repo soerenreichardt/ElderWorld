@@ -6,10 +6,10 @@ public class DependencyGraph<T> {
 
     private final Map<T, Set<T>> adjacencyList;
 
-    public static <T> DependencyGraph<T> fromClassesWithDependencies(Map<T, T[]> classesWithDependencies) {
+    public static <T> DependencyGraph<T> fromClassesWithDependencies(Map<T, List<T>> classesWithDependencies) {
         var adjacencyList = new HashMap<T, Set<T>>();
         classesWithDependencies.forEach((clazz, dependencies) -> {
-            adjacencyList.put(clazz, new HashSet<>(Arrays.asList(dependencies)));
+            adjacencyList.put(clazz, new HashSet<>(dependencies));
         });
         return new DependencyGraph<>(adjacencyList);
     }

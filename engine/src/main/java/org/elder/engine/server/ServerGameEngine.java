@@ -1,8 +1,8 @@
 package org.elder.engine.server;
 
-import org.elder.engine.Scene;
 import org.elder.engine.api.GameEngine;
 import org.elder.engine.api.GameExecutable;
+import org.elder.engine.ecs.api.BasicScene;
 import org.elder.engine.ecs.api.Resource;
 import org.elder.engine.ecs.system.SystemManager;
 import org.elder.engine.ecs.system.SystemManagerBuilder;
@@ -11,11 +11,11 @@ import org.elder.engine.script.ScriptSystem;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ServerGameEngine extends GameEngine<Scene> {
+public class ServerGameEngine extends GameEngine<BasicScene> {
 
     private final AtomicBoolean exitFlag;
 
-    protected ServerGameEngine(GameExecutable<Scene> gameExecutable, AtomicBoolean exitFlag, Resource[] resources) {
+    protected ServerGameEngine(GameExecutable<BasicScene> gameExecutable, AtomicBoolean exitFlag, Resource[] resources) {
         super(gameExecutable, resources);
         this.exitFlag = exitFlag;
     }
@@ -26,6 +26,7 @@ public class ServerGameEngine extends GameEngine<Scene> {
                 .withResources(resources)
                 .withSystemClass(PositioningSystem.class)
                 .withSystemClass(ScriptSystem.class)
+                .skipMissingDependencies()
                 .build();
     }
 

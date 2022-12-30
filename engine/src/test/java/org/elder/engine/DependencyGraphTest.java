@@ -3,6 +3,7 @@ package org.elder.engine;
 import org.elder.engine.ecs.DependencyGraph;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -14,11 +15,11 @@ class DependencyGraphTest {
     @Test
     void shouldSortIntoCorrectTiers() {
         var dependencyGraph = DependencyGraph.fromClassesWithDependencies(Map.of(
-                "A", new String[0],
-                "B", new String[]{ "A" },
-                "C", new String[]{ "B" },
-                "D", new String[0],
-                "E", new String[]{ "B", "D" }
+                "A", List.of(),
+                "B", List.of("A"),
+                "C", List.of("B"),
+                "D", List.of(),
+                "E", List.of("B", "D")
         ));
 
         var sortedStrings = dependencyGraph.topologicalSort();
@@ -31,9 +32,9 @@ class DependencyGraphTest {
     @Test
     void shouldDetectCycles() {
         var dependencyGraph = DependencyGraph.fromClassesWithDependencies(Map.of(
-                "A", new String[] { "C" },
-                "B", new String[] { "A" },
-                "C", new String[] { "B" }
+                "A", List.of("C"),
+                "B", List.of("A"),
+                "C", List.of("B")
         ));
 
         assertThatThrownBy(dependencyGraph::topologicalSort)
@@ -44,8 +45,8 @@ class DependencyGraphTest {
     @Test
     void shouldCheckForValidDependencies() {
         assertThatThrownBy(() -> DependencyGraph.fromClassesWithDependencies(Map.of(
-                "A", new String[] { "B" },
-                "B", new String[] { "Missing" }
+                "A", List.of("B"),
+                "B", List.of("Missing")
         )))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessageContaining("Element `Missing` was not found");

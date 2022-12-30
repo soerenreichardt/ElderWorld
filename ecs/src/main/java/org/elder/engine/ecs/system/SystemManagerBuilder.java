@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 public class SystemManagerBuilder {
 
     private Resource[] resources;
+    private SystemLoader.MissingDependencyStrategy missingDependencyStrategy = SystemLoader.MissingDependencyStrategy.FAIL;
 
     public ReflectionSystemManagerBuilder fromReflection() {
         return new ReflectionSystemManagerBuilder(this);
@@ -24,6 +25,10 @@ public class SystemManagerBuilder {
 
     void withResources(Resource[] resources) {
         this.resources = resources;
+    }
+
+    void withMissingDependencyStrategy(SystemLoader.MissingDependencyStrategy missingDependencyStrategy) {
+        this.missingDependencyStrategy = missingDependencyStrategy;
     }
 
     public static class ReflectionSystemManagerBuilder {
@@ -43,6 +48,11 @@ public class SystemManagerBuilder {
 
         public ReflectionSystemManagerBuilder withResources(Resource[] resources) {
             systemManagerBuilder.withResources(resources);
+            return this;
+        }
+
+        public ReflectionSystemManagerBuilder skipMissingDependencies() {
+            systemManagerBuilder.withMissingDependencyStrategy(SystemLoader.MissingDependencyStrategy.SKIP);
             return this;
         }
 
@@ -76,13 +86,18 @@ public class SystemManagerBuilder {
             return this;
         }
 
+        public ListSystemManagerBuilder skipMissingDependencies() {
+            systemManagerBuilder.withMissingDependencyStrategy(SystemLoader.MissingDependencyStrategy.SKIP);
+            return this;
+        }
+
         public SystemManager build() {
             return systemManagerBuilder.finalizeSystemManager(systemClassesList.stream());
         }
     }
 
     SystemManager finalizeSystemManager(Stream<Class<? extends UpdatableSystem>> systemClassesStream) {
-        var systemLoader = new SystemLoader(systemClassesStream, resources);
+        var systemLoader = new SystemLoader(systemClassesStream, missingDependencyStrategy, resources);
         return new SystemManager(systemLoader);
     }
 }
