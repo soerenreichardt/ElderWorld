@@ -6,7 +6,7 @@ import org.elder.engine.api.GameExecutable;
 import org.elder.geometry.Square;
 import org.joml.Vector2f;
 
-public class TestGame implements GameExecutable {
+public class TestGame implements GameExecutable<Scene> {
 
     @Override
     public void execute(GameEngineApi<Scene> api) {

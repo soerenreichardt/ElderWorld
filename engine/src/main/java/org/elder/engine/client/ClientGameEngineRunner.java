@@ -1,5 +1,7 @@
-package org.elder.engine;
+package org.elder.engine.client;
 
+import org.elder.engine.Scene;
+import org.elder.engine.api.GameEngineRunner;
 import org.elder.engine.api.GameExecutable;
 import org.elder.engine.ecs.Component;
 import org.elder.engine.ecs.ComponentRegistry;
@@ -11,14 +13,14 @@ import org.reflections.scanners.Scanners;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 
-public class GameEngineRunner {
+public class ClientGameEngineRunner implements GameEngineRunner<Scene> {
 
     private int width;
     private int height;
 
     private final KeyInputResource keyInputResource;
 
-    public GameEngineRunner(int width, int height) {
+    public ClientGameEngineRunner(int width, int height) {
         this.width = width;
         this.height = height;
 
@@ -27,13 +29,14 @@ public class GameEngineRunner {
         registerComponents();
     }
 
-    public void start(GameExecutable gameExecutable) throws InterruptedException {
+    @Override
+    public void start(GameExecutable<Scene> gameExecutable) throws InterruptedException {
         var window = new Window(width, height);
         window.initialize();
 
         glfwSetKeyCallback(window.getId(), keyInputResource);
 
-        var game = new GameEngine(window, gameExecutable, keyInputResource);
+        var game = new ClientGameEngine(window, gameExecutable, keyInputResource);
         game.start();
         windowLoop(window);
 

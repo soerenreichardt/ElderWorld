@@ -1,34 +1,34 @@
-package org.elder.engine;
+package org.elder.engine.client;
 
-import org.elder.engine.api.GameEngineApi;
+import org.elder.engine.Scene;
+import org.elder.engine.api.GameEngine;
 import org.elder.engine.api.GameExecutable;
 import org.elder.engine.ecs.api.Resource;
 import org.elder.engine.ecs.system.SystemManager;
+import org.elder.engine.ecs.system.SystemManagerBuilder;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
-public class GameEngine extends Thread implements GameEngineApi<Scene> {
+public class ClientGameEngine extends GameEngine<Scene> {
 
     private final Window window;
     private final long windowId;
 
-    private final GameExecutable gameExecutable;
-    private final SystemManager systemManager;
-
-    private Scene activeScene;
-
-    public GameEngine(
+    public ClientGameEngine(
             Window window,
-            GameExecutable gameExecutable,
+            GameExecutable<Scene> gameExecutable,
             Resource... resources
     ) {
+        super(gameExecutable, resources);
         this.window = window;
         this.windowId = window.getId();
-        this.gameExecutable = gameExecutable;
-        this.systemManager = SystemManager
-                .builder()
+    }
+
+    @Override
+    protected final SystemManager initializeSystemManager(SystemManagerBuilder systemManagerBuilder, Resource[] resources) {
+        return systemManagerBuilder
                 .fromReflection()
                 .withResources(resources)
                 .withPackagePrefix("org.elder")
@@ -36,26 +36,23 @@ public class GameEngine extends Thread implements GameEngineApi<Scene> {
     }
 
     @Override
-    public void run() {
+    protected void initialize() {
         initializeOpenGL();
+    }
 
-        systemManager.start();
-        gameExecutable.execute(this);
+    @Override
+    protected void preUpdate() {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+    }
 
-        var lastTime = System.nanoTime();
-        while (!window.shouldClose()) {
-            var currentTime = System.nanoTime();
-            float dt = (currentTime - lastTime) * 1E-9f;
-            lastTime = currentTime;
+    @Override
+    protected void update(float delta) {
+        glfwSwapBuffers(windowId); // swap the color buffers
+    }
 
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-
-            systemManager.update(dt);
-
-            glfwSwapBuffers(windowId); // swap the color buffers
-        }
-
-        systemManager.stop();
+    @Override
+    protected boolean interruptGameLoop() {
+        return window.shouldClose();
     }
 
     @Override

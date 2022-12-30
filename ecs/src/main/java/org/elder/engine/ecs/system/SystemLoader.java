@@ -16,10 +16,21 @@ import java.util.stream.Stream;
 class SystemLoader {
 
     private final Stream<Class<? extends UpdatableSystem>> systemClassesStream;
+    private final MissingDependencyStrategy missingDependencyStrategy;
     private final @Nullable Resource[] resources;
 
-    public SystemLoader(Stream<Class<? extends UpdatableSystem>> systemClassesStream, Resource[] resources) {
+    enum MissingDependencyStrategy {
+        SKIP,
+        FAIL
+    }
+
+    public SystemLoader(
+            Stream<Class<? extends UpdatableSystem>> systemClassesStream,
+            MissingDependencyStrategy missingDependencyStrategy,
+            Resource[] resources
+    ) {
         this.systemClassesStream = systemClassesStream;
+        this.missingDependencyStrategy = missingDependencyStrategy;
         this.resources = resources;
     }
 
@@ -28,14 +39,31 @@ class SystemLoader {
                 .filter(clazz -> clazz.isAnnotationPresent(GameSystem.class))
                 .collect(Collectors.toMap(
                         Function.identity(),
-                        clazz -> clazz.getAnnotation(GameSystem.class).value()
+                        clazz -> Arrays.asList(clazz.getAnnotation(GameSystem.class).value())
                 ));
+
+        if (missingDependencyStrategy == MissingDependencyStrategy.SKIP) {
+            filterMissingDependencies(systemClassesWithDependencies);
+        }
 
         var dependencyGraph = DependencyGraph.fromClassesWithDependencies(systemClassesWithDependencies);
         var tieredSystemClasses = dependencyGraph.topologicalSort();
 
         var resourceMap = toResourceMap(resources);
         return initializeTieredSystemClasses(tieredSystemClasses, resourceMap);
+    }
+
+    private void filterMissingDependencies(Map<Class<? extends UpdatableSystem>, List<Class<? extends UpdatableSystem>>> systemClassesWithDependencies) {
+        var availableSystems = systemClassesWithDependencies.keySet();
+        systemClassesWithDependencies.forEach((systemClass, dependencies) -> {
+            var resolvableDependencies = new ArrayList<Class<? extends UpdatableSystem>>();
+            for (Class<? extends UpdatableSystem> dependency : dependencies) {
+                if (availableSystems.contains(dependency)) {
+                    resolvableDependencies.add(dependency);
+                }
+            }
+            systemClassesWithDependencies.put(systemClass, resolvableDependencies);
+        });
     }
 
     private List<Set<UpdatableSystem>> initializeTieredSystemClasses(List<Set<Class<? extends UpdatableSystem>>> tieredSystemClasses, Map<Class<?>, Resource> resourceMap) {

@@ -44,6 +44,7 @@ public class ComponentArray implements Iterable<Component> {
         var internalId = idMapping.get(id);
         components.set(internalId, null);
         idMapping.set(id, EMPTY_ELEMENT);
+        idManager.removeId(id);
     }
 
     public int size() {
