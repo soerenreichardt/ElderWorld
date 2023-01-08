@@ -40,6 +40,10 @@ public abstract class AbstractGameObject {
         return this.transform;
     }
 
+    public String name() {
+        return this.name;
+    }
+
     public <C extends Component> C addComponent(Class<C> componentClass) {
         return this.componentManager.addComponent(id, componentClass);
     }

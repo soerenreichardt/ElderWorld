@@ -20,7 +20,7 @@ public class BasicScene {
         this.gameObjects = new ArrayList<>();
     }
 
-    public void addGameObject(AbstractGameObject gameObject) {
+    public <T extends AbstractGameObject> T addGameObject(T gameObject) {
         var id = idManager.getNewId();
         gameObject.initialize(id, this);
         if (id == gameObjects.size()) {
@@ -28,6 +28,7 @@ public class BasicScene {
         } else {
             this.gameObjects.set(id, gameObject);
         }
+        return gameObject;
     }
 
     public void removeGameObject(int id) {

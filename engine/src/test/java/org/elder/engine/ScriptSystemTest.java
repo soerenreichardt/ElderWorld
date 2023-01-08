@@ -1,7 +1,6 @@
 package org.elder.engine;
 
 import org.elder.engine.ecs.ComponentRegistry;
-import org.elder.engine.ecs.GameObject;
 import org.elder.engine.ecs.SceneRepository;
 import org.elder.engine.ecs.Transform;
 import org.elder.engine.ecs.api.BasicScene;
@@ -95,7 +94,7 @@ public class ScriptSystemTest {
 
         @Override
         public void initialize() {
-            var go = new GameObject("Foo");
+            var go = createGameObject("Foo");
             var velocity = go.addComponent(Velocity.class);
             velocity.velocity = new Vector2f(13.37f, 13.37f);
         }

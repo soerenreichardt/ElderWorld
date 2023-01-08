@@ -1,11 +1,10 @@
-package org.elder.engine.ecs;
+package org.elder.engine.script;
 
 import org.elder.engine.ecs.api.AbstractGameObject;
 
 public class GameObject extends AbstractGameObject {
-    public GameObject(String name) {
+    GameObject(String name) {
         super(name);
-        SceneRepository.getScene().addGameObject(this);
     }
 
     @Override
