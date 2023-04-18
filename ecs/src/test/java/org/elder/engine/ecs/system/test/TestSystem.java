@@ -1,5 +1,6 @@
 package org.elder.engine.ecs.system.test;
 
+import org.elder.engine.ecs.api.AbstractGameObject;
 import org.elder.engine.ecs.api.BasicScene;
 import org.elder.engine.ecs.api.GameSystem;
 import org.elder.engine.ecs.api.UpdatableSystem;
@@ -24,6 +25,11 @@ public class TestSystem implements UpdatableSystem {
 
     @Override
     public void onSceneChanged(BasicScene scene) {
+
+    }
+
+    @Override
+    public void onGameObjectAdded(AbstractGameObject gameObject) {
 
     }
 }

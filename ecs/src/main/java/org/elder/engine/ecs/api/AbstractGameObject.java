@@ -52,6 +52,10 @@ public abstract class AbstractGameObject {
         return this.componentManager.getComponent(id, componentClass);
     }
 
+    public <C extends Component> boolean hasComponent(Class<C> componentClass) {
+        return this.componentManager.hasComponent(id, componentClass);
+    }
+
     public final void destroy() {
         scene.removeGameObject(id);
     }

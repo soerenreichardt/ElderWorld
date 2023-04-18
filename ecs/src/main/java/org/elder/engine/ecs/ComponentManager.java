@@ -18,7 +18,7 @@ public class ComponentManager {
                 .orElseGet(Collections::emptyIterator);
     }
 
-    public <T1 extends Component, T2 extends Component> Iterable<Pair<T1, T2>> compoundListIterable(Class<T1> class1, Class<T2> class2) {
+    public <T1 extends Component, T2 extends Component> Iterable<ComponentPair<T1, T2>> compoundListIterable(Class<T1> class1, Class<T2> class2) {
         var components1 = this.components.get(class1);
         var components2 = this.components.get(class2);
 
@@ -45,6 +45,13 @@ public class ComponentManager {
         throw new IllegalArgumentException(String.format("No component of type %s was found", componentClass.getSimpleName()));
     }
 
+    public <C extends Component> boolean hasComponent(int entityId, Class<C> componentClass) {
+        if (this.components.containsKey(componentClass)) {
+            return this.components.get(componentClass).contains(entityId);
+        }
+        return false;
+    }
+
     public void removeEntity(int entityId) {
         components.values().forEach(componentList -> componentList.remove(entityId));
     }
@@ -54,7 +61,7 @@ public class ComponentManager {
          C create();
     }
 
-    public static class Pair<T1 extends Component, T2 extends Component> {
+    public static class ComponentPair<T1 extends Component, T2 extends Component> {
         public T1 component1;
         public T2 component2;
     }

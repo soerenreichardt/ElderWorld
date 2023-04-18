@@ -1,5 +1,6 @@
 package org.elder.engine.api;
 
+import org.elder.engine.ecs.api.AbstractGameObject;
 import org.elder.engine.ecs.api.BasicScene;
 import org.elder.engine.ecs.api.Resource;
 import org.elder.engine.ecs.system.SystemManager;
@@ -48,6 +49,14 @@ public abstract class GameEngine<S extends BasicScene> extends Thread implements
         if (activeScene != scene) {
             activeScene = scene;
             systemManager.onSceneChanged(scene);
+        }
+    }
+
+    @Override
+    public void addGameObject(AbstractGameObject gameObject) {
+        if (activeScene != null) {
+            activeScene.addGameObject(gameObject);
+            systemManager.onGameObjectAdded(gameObject);
         }
     }
 

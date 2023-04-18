@@ -1,20 +1,16 @@
 package org.elder.engine.script;
 
+import org.elder.engine.api.GameEngineApi;
 import org.elder.engine.ecs.api.AbstractGameObject;
 import org.elder.engine.ecs.api.BasicScene;
 
 public abstract class ScriptableGameObject extends AbstractGameObject implements CustomScript {
 
-    private BasicScene scene;
+    protected final GameEngineApi<? extends BasicScene> api;
 
-    public ScriptableGameObject(String name) {
+    public ScriptableGameObject(String name, GameEngineApi<? extends BasicScene> api) {
         super(name);
-    }
-
-    @Override
-    public void initialize(int id, BasicScene scene) {
-        super.initialize(id, scene);
-        this.scene = scene;
+        this.api = api;
     }
 
     @Override
@@ -23,10 +19,8 @@ public abstract class ScriptableGameObject extends AbstractGameObject implements
     }
 
     public GameObject createGameObject(String name) {
-        if (this.scene != null) {
-            return this.scene.addGameObject(new GameObject(name));
-        } else {
-            throw new IllegalStateException(String.format("Scriptable game object %s is not initialized", name()));
-        }
+        var gameObject = new GameObject(name);
+        this.api.addGameObject(gameObject);
+        return gameObject;
     }
 }

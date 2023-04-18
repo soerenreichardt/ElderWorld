@@ -2,6 +2,7 @@ package org.elder.engine.rendering;
 
 import org.elder.engine.Scene;
 import org.elder.engine.ecs.Transform;
+import org.elder.engine.ecs.api.AbstractGameObject;
 import org.elder.engine.ecs.api.BasicScene;
 import org.elder.engine.ecs.api.GameSystem;
 import org.elder.engine.ecs.api.UpdatableSystem;
@@ -45,6 +46,16 @@ public class RenderSystem implements UpdatableSystem {
     }
 
     @Override
+    public void onGameObjectAdded(AbstractGameObject gameObject) {
+        if (gameObject.hasComponent(Mesh.class)) {
+            var newMesh = gameObject.getComponent(Mesh.class);
+            if (!newMesh.isInitialized()) {
+                initializeMesh(newMesh);
+            }
+        }
+    }
+
+    @Override
     public void stop() {
         cleanUp();
     }
@@ -55,27 +66,29 @@ public class RenderSystem implements UpdatableSystem {
     }
 
     private void initialize() {
-        for (Mesh mesh : meshComponents) {
-            var vao = glGenVertexArrays();
-            glBindVertexArray(vao);
+        meshComponents.forEach(this::initializeMesh);
+    }
 
-            int vbo = glGenBuffers();
-            int ibo = glGenBuffers();
-            var indices = fillOpenGLBuffers(mesh, vbo, ibo);
+    private void initializeMesh(Mesh mesh) {
+        var vao = glGenVertexArrays();
+        glBindVertexArray(vao);
 
-            var shader = mesh.shader;
-            shader.compile();
+        int vbo = glGenBuffers();
+        int ibo = glGenBuffers();
+        var indices = fillOpenGLBuffers(mesh, vbo, ibo);
 
-            shader.use();
-            glUniformMatrix4fv(shader.projectionMatrixUniformLocation(), false, camera.projectionMatrix().get(new float[16]));
-            shader.unUse();
+        var shader = mesh.shader;
+        shader.compile();
 
-            var positionMatrixLocation = shader.positionMatrixLocation();
-            glEnableVertexAttribArray(positionMatrixLocation);
-            glVertexAttribPointer(positionMatrixLocation, 2, GL_FLOAT, false, 0, 0L);
+        shader.use();
+        glUniformMatrix4fv(shader.projectionMatrixUniformLocation(), false, camera.projectionMatrix().get(new float[16]));
+        shader.unUse();
 
-            buffersList.add(new RenderObject(indices, mesh.transform, shader, vao, vbo, ibo));
-        }
+        var positionMatrixLocation = shader.positionMatrixLocation();
+        glEnableVertexAttribArray(positionMatrixLocation);
+        glVertexAttribPointer(positionMatrixLocation, 2, GL_FLOAT, false, 0, 0L);
+
+        buffersList.add(new RenderObject(indices, mesh.transform, shader, vao, vbo, ibo));
     }
 
     private void renderMesh(RenderObject obj) {

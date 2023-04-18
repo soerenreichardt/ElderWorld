@@ -11,4 +11,14 @@ public class Mesh extends Component {
     public int[] indices;
     public Shader shader;
     public Transform transform;
+
+    private boolean initialized = false;
+
+    public void initialize() {
+        this.initialized = true;
+    }
+
+    public boolean isInitialized() {
+        return this.initialized;
+    }
 }

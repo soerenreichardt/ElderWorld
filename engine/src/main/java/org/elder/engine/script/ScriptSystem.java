@@ -1,5 +1,6 @@
 package org.elder.engine.script;
 
+import org.elder.engine.ecs.api.AbstractGameObject;
 import org.elder.engine.ecs.api.BasicScene;
 import org.elder.engine.ecs.api.GameSystem;
 import org.elder.engine.ecs.api.UpdatableSystem;
@@ -38,6 +39,13 @@ public class ScriptSystem implements UpdatableSystem {
     public void onSceneChanged(BasicScene scene) {
         this.scriptComponents = scene.componentManager().componentListIterable(Script.class);
         startScripts();
+    }
+
+    @Override
+    public void onGameObjectAdded(AbstractGameObject gameObject) {
+        if (gameObject.hasComponent(Script.class)) {
+            gameObject.getComponent(Script.class).customScript.initialize();
+        }
     }
 
     private void startScripts() {
