@@ -1,5 +1,6 @@
 package org.elder.engine.physics;
 
+import org.elder.engine.ecs.api.AbstractGameObject;
 import org.elder.engine.ecs.api.BasicScene;
 import org.elder.engine.ecs.api.GameSystem;
 import org.elder.engine.ecs.api.UpdatableSystem;
@@ -26,6 +27,11 @@ public class PositioningSystem implements UpdatableSystem {
     @Override
     public void onSceneChanged(BasicScene scene) {
         velocityComponents = scene.componentManager().componentListIterable(Velocity.class);
+    }
+
+    @Override
+    public void onGameObjectAdded(AbstractGameObject gameObject) {
+        // velocity iterator should see updates
     }
 
     @Override

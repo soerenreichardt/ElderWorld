@@ -1,16 +1,15 @@
 package org.elder.engine;
 
+import org.elder.engine.api.GameEngineApi;
 import org.elder.engine.ecs.ComponentRegistry;
-import org.elder.engine.ecs.GameObject;
-import org.elder.engine.ecs.SceneRepository;
 import org.elder.engine.ecs.Transform;
+import org.elder.engine.ecs.api.AbstractGameObject;
 import org.elder.engine.ecs.api.BasicScene;
 import org.elder.engine.physics.Velocity;
 import org.elder.engine.script.Script;
 import org.elder.engine.script.ScriptSystem;
 import org.elder.engine.script.ScriptableGameObject;
 import org.joml.Vector2f;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,11 +26,6 @@ public class ScriptSystemTest {
         ComponentRegistry.getInstance().registerComponent(Transform.class);
         ComponentRegistry.getInstance().registerComponent(Velocity.class);
         ComponentRegistry.getInstance().registerComponent(Script.class);
-    }
-
-    @AfterEach
-    void tearDown() {
-        SceneRepository.setScene(null);
     }
 
     @Test
@@ -53,10 +47,9 @@ public class ScriptSystemTest {
     @Test
     void shouldSpawnNewComponents() {
         var scene = new BasicScene("Test");
-        var gameObject = new NewGameObjectScriptableObject("ScriptableObject");
+        var gameObject = new NewGameObjectScriptableObject("ScriptableObject", new SceneBasedApi(scene));
         scene.addGameObject(gameObject);
 
-        SceneRepository.setScene(scene);
         scriptSystem.start();
         scriptSystem.onSceneChanged(scene);
 
@@ -72,7 +65,7 @@ public class ScriptSystemTest {
         private final AtomicBoolean updated;
 
         public TestScriptableObject(String name, AtomicBoolean started, AtomicBoolean updated) {
-            super(name);
+            super(name, null);
             this.started = started;
             this.updated = updated;
         }
@@ -89,13 +82,13 @@ public class ScriptSystemTest {
     }
 
     static class NewGameObjectScriptableObject extends ScriptableGameObject {
-        public NewGameObjectScriptableObject(String name) {
-            super(name);
+        public NewGameObjectScriptableObject(String name, SceneBasedApi sceneBasedApi) {
+            super(name, sceneBasedApi);
         }
 
         @Override
         public void initialize() {
-            var go = new GameObject("Foo");
+            var go = createGameObject("Foo");
             var velocity = go.addComponent(Velocity.class);
             velocity.velocity = new Vector2f(13.37f, 13.37f);
         }
@@ -103,6 +96,25 @@ public class ScriptSystemTest {
         @Override
         public void update(float delta) {
 
+        }
+    }
+
+    static class SceneBasedApi implements GameEngineApi<BasicScene> {
+
+        private final BasicScene scene;
+
+        SceneBasedApi(BasicScene scene) {
+            this.scene = scene;
+        }
+
+        @Override
+        public void setScene(BasicScene scene) {
+
+        }
+
+        @Override
+        public void addGameObject(AbstractGameObject gameObject) {
+            this.scene.addGameObject(gameObject);
         }
     }
 }

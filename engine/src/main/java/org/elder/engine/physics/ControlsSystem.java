@@ -1,6 +1,7 @@
 package org.elder.engine.physics;
 
-import org.elder.engine.ecs.ComponentManager;
+import org.elder.engine.ecs.ComponentManager.ComponentPair;
+import org.elder.engine.ecs.api.AbstractGameObject;
 import org.elder.engine.ecs.api.BasicScene;
 import org.elder.engine.ecs.api.GameSystem;
 import org.elder.engine.ecs.api.UpdatableSystem;
@@ -13,7 +14,7 @@ import java.util.Collections;
 public class ControlsSystem implements UpdatableSystem {
 
     private final KeyInputResource keyInputResource;
-    private Iterable<ComponentManager.Pair<Velocity, Controllable>> velocityControllableIterator;
+    private Iterable<ComponentPair<Velocity, Controllable>> velocityControllableIterator;
 
     public ControlsSystem(KeyInputResource keyInputResource) {
         this.keyInputResource = keyInputResource;
@@ -32,7 +33,7 @@ public class ControlsSystem implements UpdatableSystem {
 
     @Override
     public void update(float delta) {
-        for (ComponentManager.Pair<Velocity, Controllable> velocityControllablePair : velocityControllableIterator) {
+        for (ComponentPair<Velocity, Controllable> velocityControllablePair : velocityControllableIterator) {
             var controlsInputMapping = velocityControllablePair.component2.controlsInputMapping;
             var velocity = velocityControllablePair.component1;
 
@@ -60,5 +61,10 @@ public class ControlsSystem implements UpdatableSystem {
     @Override
     public void onSceneChanged(BasicScene scene) {
         velocityControllableIterator = scene.componentManager().compoundListIterable(Velocity.class, Controllable.class);
+    }
+
+    @Override
+    public void onGameObjectAdded(AbstractGameObject gameObject) {
+        // controllable iterator should see updates
     }
 }

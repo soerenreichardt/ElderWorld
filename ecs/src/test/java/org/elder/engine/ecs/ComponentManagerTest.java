@@ -78,7 +78,7 @@ class ComponentManagerTest {
         componentManager.addComponent(3, TestComponent2.class);
 
         int counter = 0;
-        for (ComponentManager.Pair<TestComponent, TestComponent2> pair : componentManager.compoundListIterable(TestComponent.class, TestComponent2.class)) {
+        for (ComponentManager.ComponentPair<TestComponent, TestComponent2> pair : componentManager.compoundListIterable(TestComponent.class, TestComponent2.class)) {
             counter++;
         }
 

@@ -1,6 +1,6 @@
 package org.elder.engine.ecs.system;
 
-import org.elder.engine.ecs.SceneRepository;
+import org.elder.engine.ecs.api.AbstractGameObject;
 import org.elder.engine.ecs.api.BasicScene;
 import org.elder.engine.ecs.api.UpdatableSystem;
 import org.jetbrains.annotations.TestOnly;
@@ -43,8 +43,12 @@ public class SystemManager implements UpdatableSystem {
 
     @Override
     public void onSceneChanged(BasicScene scene) {
-        SceneRepository.setScene(scene);
         forEachSystem(system -> system.onSceneChanged(scene));
+    }
+
+    @Override
+    public void onGameObjectAdded(AbstractGameObject gameObject) {
+        forEachSystem(system -> system.onGameObjectAdded(gameObject));
     }
 
     @TestOnly

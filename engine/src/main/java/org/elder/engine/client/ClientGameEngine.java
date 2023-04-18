@@ -57,10 +57,6 @@ public class ClientGameEngine extends GameEngine<Scene> {
 
     @Override
     public void setScene(Scene scene) {
-        setActiveScene(scene);
-    }
-
-    private void setActiveScene(Scene scene) {
         if (activeScene != scene) {
             activeScene = scene;
             scene.camera().initializeProjectionMatrix(window.width(), window.height());
